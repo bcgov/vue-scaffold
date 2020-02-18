@@ -18,7 +18,9 @@ module.exports = {
   },
   rules: {
     'eol-last': ['error', 'always'],
-    indent: ['error', 2],
+    indent: ['error', 2, {
+      "SwitchCase": 1
+    }],
     'linebreak-style': ['error', 'unix'],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'warn',

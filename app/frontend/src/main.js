@@ -1,5 +1,4 @@
 import axios from 'axios';
-import NProgress from 'nprogress';
 import Vue from 'vue';
 import VueKeycloakJs from '@dsb-norge/vue-keycloak-js';
 
@@ -35,9 +34,9 @@ Vue.use(VueKeycloakJs, {
     onLoad: 'check-sso'
   },
   config: {
-    clientId: '',
-    realm: '',
-    url: ''
+    clientId: 'YOURCLIENTHERE',
+    realm: 'YOURREALMHERE',
+    url: 'YOURAUTHURLHERE'
   },
   onReady: kc => {
     const timeout = 10000;
@@ -45,12 +44,11 @@ Vue.use(VueKeycloakJs, {
     const instance = axios.create({ timeout: timeout });
     // API focused Axios instance with timeout and authorization header insertion
     const instanceApi = axios.create({
-      baseURL: '/app/api/v1',
+      baseURL: '/api/v1',
       timeout: timeout
     });
 
     instanceApi.interceptors.request.use(cfg => {
-      NProgress.start();
       if (kc.authenticated) {
         cfg.headers.Authorization = `Bearer ${kc.token}`;
       }
@@ -60,7 +58,6 @@ Vue.use(VueKeycloakJs, {
     });
 
     instanceApi.interceptors.response.use(response => {
-      NProgress.stop();
       return Promise.resolve(response);
     }, error => {
       return Promise.reject(error);
