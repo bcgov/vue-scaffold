@@ -9,6 +9,18 @@ import vuetify from '@/plugins/vuetify';
 
 Vue.config.productionTip = false;
 
+/**
+ * @function initializeApp
+ * Initializes and mounts the vue instance
+ */
+function initializeApp() {
+  new Vue({
+    router,
+    vuetify,
+    render: h => h(App)
+  }).$mount('#app');
+}
+
 // Globally register all components with base in the name
 const requireComponent = require.context('@/components', true, /Base[A-Z]\w+\.(vue|js)$/);
 requireComponent.keys().forEach(fileName => {
@@ -58,15 +70,12 @@ Vue.use(VueKeycloakJs, {
     Vue.prototype.$http = instance;
     Vue.prototype.$httpApi = instanceApi;
 
-    new Vue({
-      router,
-      vuetify,
-      render: h => h(App)
-    }).$mount('#app');
+    initializeApp();
   },
   onInitError: error => {
     console.error('Keycloak failed to initialize'); // eslint-disable-line no-console
     console.error(error); // eslint-disable-line no-console
+    initializeApp();
   }
 });
 

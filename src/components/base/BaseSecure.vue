@@ -1,10 +1,10 @@
 <template>
-  <div v-if="$keycloak.authenticated">
+  <div v-if="$keycloak.ready && $keycloak.authenticated">
     <slot />
   </div>
   <div v-else class="text-center">
     <h1>You must be logged in to use this feature.</h1>
-    <v-btn color="secondary" class="login-btn" id="auth-login" @click="login" large>
+    <v-btn v-if="$keycloak.ready" color="secondary" class="login-btn" id="auth-login" @click="login" large>
       <v-icon left>mdi-login</v-icon>
       <span>Login</span>
     </v-btn>
@@ -16,7 +16,9 @@ export default {
   name: 'BaseSecure',
   methods: {
     login() {
-      window.location.replace(this.$keycloak.createLoginUrl());
+      if (this.$keycloak.ready) {
+        window.location.replace(this.$keycloak.createLoginUrl());
+      }
     }
   }
 };

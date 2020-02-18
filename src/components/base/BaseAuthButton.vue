@@ -1,5 +1,5 @@
 <template>
-  <div v-if="kcReady">
+  <div v-if="$keycloak.ready">
     <v-btn
       v-if="$keycloak.authenticated"
       color="secondary"
@@ -20,17 +20,16 @@
 <script>
 export default {
   name: 'BaseAuthButton',
-  computed: {
-    kcReady() {
-      return !!this.$keycloak && this.$keycloak.ready;
-    }
-  },
   methods: {
     login() {
-      window.location.replace(this.$keycloak.createLoginUrl());
+      if (this.$keycloak.ready) {
+        window.location.replace(this.$keycloak.createLoginUrl());
+      }
     },
     logout() {
-      window.location.replace(this.$keycloak.createLogoutUrl());
+      if (this.$keycloak.ready) {
+        window.location.replace(this.$keycloak.createLogoutUrl());
+      }
     }
   }
 };

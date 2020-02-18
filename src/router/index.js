@@ -31,7 +31,9 @@ const router = new VueRouter({
 
 router.beforeEach((to, _from, next) => {
   NProgress.start();
-  if (to.matched.some(route => route.meta.requiresAuth) && !router.app.$keycloak.authenticated) {
+  if (to.matched.some(route => route.meta.requiresAuth)
+    && router.app.$keycloak.ready
+    && !router.app.$keycloak.authenticated) {
     const loginUrl = router.app.$keycloak.createLoginUrl();
     window.location.replace(loginUrl);
   } else {
