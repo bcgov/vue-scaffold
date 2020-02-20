@@ -4,7 +4,7 @@
   </div>
   <div v-else class="text-center">
     <h1>You must be logged in to use this feature.</h1>
-    <v-btn v-if="$keycloak.ready" color="secondary" class="login-btn" id="auth-login" @click="login" large>
+    <v-btn v-if="$keycloak.ready" color="secondary" class="login-btn" @click="login" large>
       <v-icon left>mdi-login</v-icon>
       <span>Login</span>
     </v-btn>
