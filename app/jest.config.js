@@ -7,8 +7,8 @@ module.exports = {
   testMatch: [
     '**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)'
   ],
-  testPathIgnorePatterns: ["frontend"],
+  testPathIgnorePatterns: ['frontend'],
   testURL: 'http://localhost/',
   collectCoverage: true,
-  collectCoverageFrom: ["src/**/*.js", "!src/frontend/**/*.*"]
+  collectCoverageFrom: ['src/**/*.js', '!src/frontend/**/*.*']
 };

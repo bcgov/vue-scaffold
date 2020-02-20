@@ -20,6 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Logging Setup
 log.level = 'info';
+log.addLevel('debug', 1500, {
+  fg: 'cyan'
+});
 
 app.use(morgan('dev'));
 
@@ -91,7 +94,7 @@ function shutdown() {
     // Wait 3 seconds before hard exiting
     setTimeout(() => process.exit(), 3000);
   }
-};
+}
 
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
