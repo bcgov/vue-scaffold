@@ -23,13 +23,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .gov-header {
   border-bottom: 2px solid #fcba19;
-}
-
-.title {
-  color: #ffffff;
-  padding: 1rem;
+  .title {
+    color: #ffffff;
+    padding: 1rem;
+  }
 }
 </style>

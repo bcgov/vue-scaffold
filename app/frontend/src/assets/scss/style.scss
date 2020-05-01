@@ -55,7 +55,7 @@ a, .v-tab {
   text-decoration: none;
   &:hover {
     text-decoration: underline;
-    button {
+    button, .v-icon {
       display: inline-block;
       text-decoration: none;
     }
@@ -93,7 +93,7 @@ a, .v-tab {
 
 // Stepper
 .silv-stepper {
-  .header-row{
+  .header-row {
     background-color: $bcgov-grey !important;
   }
   &.v-stepper--alt-labels {
@@ -112,43 +112,4 @@ a, .v-tab {
       }
     }
   }
-}
-
-// Cards
-.silv-info-card {
-  background-color: $bcgov-grey !important;
-  .v-icon {
-    color: $bcgov-blue-secondary !important;
-    margin-right: .5em;
-  }
-  ul {
-    padding-left: 4em !important;
-  }
-}
-
-.silv-contact-card {
-  background-color: $bcgov-blue-secondary !important;
-  h3 {
-    color: white !important;
-  }
-  p {
-    color: white !important;
-  }
-  .v-icon {
-    color: white !important;
-    margin-right: .5em;
-  }
-}
-
-.silv-warning-card {
-  background-color: $bcgov-orange !important;
-  .v-icon {
-    color: black !important;
-  }
-}
-
-.silv-required::after {
-  content: "*";
-  color: rgb(216, 41, 47);
-  margin-left: .2em;
 }
