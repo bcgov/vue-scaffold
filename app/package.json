@@ -7,7 +7,7 @@
     "serve": "nodemon ./bin/www",
     "build": "cd frontend && npm run build",
     "start": "node ./bin/www",
-    "test": "jest --verbose",
+    "test": "jest --verbose --forceExit --detectOpenHandles --maxWorkers=10",
     "lint": "eslint . **/www --no-fix --ext .js",
     "lint:fix": "eslint . **/www --fix --ext .js",
     "pretest": "npm run lint",
@@ -33,16 +33,17 @@
     "api-problem": "6.0.1",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
+    "config": "^3.3.1",
     "express": "^4.17.1",
-    "keycloak-connect": "^8.0.1",
-    "morgan": "^1.9.1",
+    "keycloak-connect": "^9.0.2",
+    "morgan": "^1.10.0",
     "npmlog": "^4.1.2"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-recommended": "^4.0.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "jest": "^24.9.0",
+    "jest": "^25.2.3",
     "nodemon": "^2.0.2",
     "supertest": "^4.0.2"
   }

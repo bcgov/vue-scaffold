@@ -1,4 +1,5 @@
 const compression = require('compression');
+const config = require('config');
 const express = require('express');
 const log = require('npmlog');
 const morgan = require('morgan');
@@ -15,21 +16,33 @@ const state = {
 
 const app = express();
 app.use(compression());
-app.use(express.json({ limit: '30mb' }));
+app.use(express.json({ limit: config.get('server.bodyLimit') }));
 app.use(express.urlencoded({ extended: true }));
 
 // Logging Setup
 log.level = 'info';
-log.addLevel('debug', 1500, {
-  fg: 'cyan'
-});
+log.addLevel('debug', 1500, { fg: 'cyan' });
 
-app.use(morgan('dev'));
+// Skip if running tests
+if (process.env.NODE_ENV !== 'test') {
+  // Add Morgan endpoint logging
+  app.use(morgan(config.get('server.morganFormat')));
+}
 
 // Use Keycloak OIDC Middleware
 app.use(keycloak.middleware());
 
-// GetOK Base API Directory
+// Frontend configuration endpoint
+apiRouter.use('/config', (_req, res, next) => {
+  try {
+    const frontend = config.get('frontend');
+    res.status(200).json(frontend);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Base API Directory
 apiRouter.get('/api', (_req, res) => {
   if (state.shutdown) {
     throw new Error('Server shutting down');
@@ -39,12 +52,12 @@ apiRouter.get('/api', (_req, res) => {
 });
 
 // Host API endpoints
-const apiPath = '/api/v1';
-apiRouter.use(apiPath, v1Router);
-app.use('/', apiRouter);
+apiRouter.use(`${config.get('server.apiPath')}`, v1Router);
+app.use(`${config.get('server.basePath')}`, apiRouter);
 
 // Host the static frontend assets
-const staticFilesPath = '/app';
+const staticFilesPath = config.get('frontend.basePath');
+app.use('/favicon.ico', (_req, res) => { res.redirect(`${staticFilesPath}/favicon.ico`); });
 app.use(staticFilesPath, express.static(path.join(__dirname, 'frontend/dist')));
 
 // Handle 500
@@ -65,7 +78,7 @@ app.use((err, _req, res, _next) => {
 
 // Handle 404
 app.use((req, res) => {
-  if (req.originalUrl.startsWith(apiPath)) {
+  if (req.originalUrl.startsWith(`${config.get('server.basePath')}/api`)) {
     // Return a 404 problem if attempting to access API
     new Problem(404, 'Page Not Found', {
       detail: req.originalUrl

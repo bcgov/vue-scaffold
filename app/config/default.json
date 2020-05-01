@@ -1,0 +1,35 @@
+{
+  "frontend": {
+    "apiPath": "api/v1",
+    "basePath" : "/app",
+    "keycloak": {
+      "clientId": "getok-frontend",
+      "realm": "vehizw2t",
+      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+    }
+  },
+  "server": {
+    "apiPath": "/api/v1",
+    "basePath" : "/app",
+    "bodyLimit": "30mb",
+    "keycloak": {
+      "clientId": "getok",
+      "realm": "vehizw2t",
+      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+    },
+    "logLevel": "debug",
+    "morganFormat": "combined",
+    "port": "8080"
+  },
+  "serviceClient": {
+    "commonServices": {
+      "ches": {
+        "endpoint": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api"
+      },
+      "cdogs": {
+        "endpoint": "https://cdogs-master-idcqvl-dev.pathfinder.gov.bc.ca/api"
+      },
+      "tokenEndpoint": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token"
+    }
+  }
+}
