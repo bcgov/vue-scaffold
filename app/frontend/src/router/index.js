@@ -32,9 +32,14 @@ const router = new VueRouter({
 router.beforeEach((to, _from, next) => {
   NProgress.start();
   if (to.matched.some(route => route.meta.requiresAuth)
+    && router.app.$keycloak
     && router.app.$keycloak.ready
     && !router.app.$keycloak.authenticated) {
-    const loginUrl = router.app.$keycloak.createLoginUrl();
+    const redirect = location.origin + location.pathname + '#' + to.path;
+    const loginUrl = router.app.$keycloak.createLoginUrl({
+      idpHint: 'idir',
+      redirectUri: redirect
+    });
     window.location.replace(loginUrl);
   } else {
     next();

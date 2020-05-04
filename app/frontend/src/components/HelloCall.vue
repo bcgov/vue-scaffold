@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import helloService from '@/services/helloService';
+
 export default {
   name: 'HelloWorld',
   data() {
@@ -26,16 +28,14 @@ export default {
   },
   methods: {
     async getHello() {
+      this.loading = true;
       try {
-        this.loading = true;
-        const response = await this.$httpApi.get('/hello');
+        const response = await helloService.getHello();
         this.helloData = response.data;
       } catch (e) {
-        console.error(e); // eslint-disable-line no-console
-        this.helloData = ':(';
-      } finally {
-        this.loading = false;
+        this.helloData = e;
       }
+      this.loading = false;
     }
   }
 };
