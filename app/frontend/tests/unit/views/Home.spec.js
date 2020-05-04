@@ -16,6 +16,6 @@ describe('Home.vue', () => {
       stubs: ['HelloWorld']
     });
 
-    expect(wrapper.html()).toMatch('');
+    expect(wrapper.html()).toMatch('Welcome to Vuetify');
   });
 });

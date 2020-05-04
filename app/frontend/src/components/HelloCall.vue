@@ -1,13 +1,6 @@
 <template>
-  <v-container class="hello-call text-center">
-    <v-btn
-      @click="getHello"
-      color="primary"
-      class="hello-call-btn"
-      id="hello-call-btn"
-      large
-      :loading="loading"
-    >
+  <v-container class="text-center">
+    <v-btn @click="getHello" color="primary" large :loading="loading">
       <v-icon left>mdi-hexagon-multiple</v-icon>
       <span>Get Response</span>
     </v-btn>
@@ -20,12 +13,10 @@ import helloService from '@/services/helloService';
 
 export default {
   name: 'HelloWorld',
-  data() {
-    return {
-      helloData: '???',
-      loading: false
-    };
-  },
+  data: () => ({
+    helloData: '???',
+    loading: false
+  }),
   methods: {
     async getHello() {
       this.loading = true;

@@ -1,5 +1,6 @@
 <template>
-  <v-container class="home">
+  <v-container>
+    <h1 class="my-6 text-center">Welcome to Vuetify</h1>
     <HelloWorld />
   </v-container>
 </template>
