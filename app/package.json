@@ -35,7 +35,7 @@
     "compression": "^1.7.4",
     "config": "^3.3.1",
     "express": "^4.17.1",
-    "keycloak-connect": "^9.0.2",
+    "keycloak-connect": "^10.0.0",
     "morgan": "^1.10.0",
     "npmlog": "^4.1.2"
   },
