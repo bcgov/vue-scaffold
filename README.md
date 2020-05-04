@@ -5,18 +5,25 @@ A clean Vue Keycloak full-stack Skeleton example
 
 ## Directory Structure
 
-    app                        - Application Root
-    ├── frontend               - Frontend Root
-    │   ├── src                - Vue.js frontend web application
-    │   └── tests              - Vue.js frontend web application tests
-    ├── src                    - Node.js backend web application
-    └── tests                  - Node.js backend web application tests
+    .github/                   - PR and Issue templates
+    app/                       - Application Root
+    ├── frontend/              - Frontend Root
+    │   ├── src/               - Vue.js frontend web application
+    │   └── tests/             - Vue.js frontend web application tests
+    ├── src/                   - Node.js backend web application
+    └── tests/                 - Node.js backend web application tests
+    openshift/                 - OpenShift-deployment and shared pipeline files
+    Jenkinsfile                - Top-level Pipeline
+    Jenkinsfile.cicd           - Pull-Request Pipeline
     LICENSE                    - License
+    sonar-project.properties   - SonarQube configuration
 
 ## Documentation
 
 * [Application Readme](app/README.md)
 * [Frontend Readme](app/frontend/README.md)
+* [Openshift Readme](openshift/README.md)
+* [Devops Tools Setup](https://github.com/bcgov/nr-showcase-devops-tools)
 
 ## Quick Start Dev Guide
 
@@ -48,6 +55,7 @@ The application has the following component dependencies:
 * api-problem
 * body-parser
 * compression
+* config
 * express
 * keycloak=connect
 * morgan
@@ -77,6 +85,7 @@ We installed the Vuetify framework by running `vue add Vuetify` afterwards.
 
 The frontend has the following main component dependencies:
 
+* @bcgov/bc-sans
 * @dsb-norge/vue-keycloak-js
 * axios
 * core-js
@@ -84,7 +93,8 @@ The frontend has the following main component dependencies:
 * vue
 * vue-router
 * vuetify
+* vuex
 
 #### Code Structure
 
-For the most part, we follow the Vue CLI scaffold as it is presented. However, we do also include a Keycloak prototype, and a global base component design in order to facilitate better component reuse. Keycloak authentication is handled by the vue-keycloak-js package, and the minimal BCGov styles are componetized in order to stay out of the way of the application content as much as possible. The navigation bar leverages vue-router, and the router uses webpack lazy-loading in order to optimize network traffic. Any components that start with the name `Base` and are in the app/frontend/src/components/base folder will be globally mounted onto the Vue instance and will be usable anywhere.
+For the most part, we follow the Vue CLI scaffold as it is presented. However, we do also include a Keycloak prototype, and a global base component design in order to facilitate better component reuse. Keycloak authentication is handled by the vue-keycloak-js package, and the minimal BCGov styles are componetized in order to stay out of the way of the application content as much as possible. The navigation bar leverages vue-router, and the router uses webpack lazy-loading in order to optimize network traffic. Any components that start with the name `Base` and are in the `app/frontend/src/components/base` folder will be globally mounted onto the Vue instance and will be usable anywhere.

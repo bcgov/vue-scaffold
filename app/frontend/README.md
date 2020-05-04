@@ -8,7 +8,7 @@ The Vue Skeleton frontend will require some configuration. The API it invokes wi
 
 ## Super Quickstart
 
-In [src/main.js](src/main.js), replace `YOURCLIENTHERE`, `YOURREALMHERE` and `YOURAUTHURLHERE` with the appropriate frontend values.
+Ensure that you have filled in all the appropriate configurations following [../config/custom-environment-variables.json](../config/custom-environment-variables.json) before proceeding.
 
 ### Project setup
 

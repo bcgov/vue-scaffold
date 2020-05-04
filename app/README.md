@@ -8,21 +8,38 @@ The Vue Skeleton App will require some configuration. The API will be locked dow
 
 ## Super Quickstart
 
-In [src/components/keycloak.js](src/components/keycloak.js), replace `YOURCLIENTHERE`, `YOURREALMHERE` and `YOURAUTHURLHERE` with the appropriate application values.
+Ensure that you have filled in all the appropriate configurations following [config/custom-environment-variables.json](config/custom-environment-variables.json) before proceeding.
+
+In general, most of these npm run scripts can be prepended with `all:` in order to run the same operation on both the application and the frontend sequentially.
+
+### Production Build and Run
 
 ``` sh
 npm run all:fresh-start
 ```
 
-### Run tests
+### Development Run
 
 ``` sh
-npm run all:test
+npm run serve
 ```
 
-### Lints and fixes files
+Start a new terminal
 
 ``` sh
-npm run all:lint
-npm run all:lint-fix
+cd frontend
+npm run serve
+```
+
+### Run application tests
+
+``` sh
+npm run test
+```
+
+### Lints and fixes application files
+
+``` sh
+npm run lint
+npm run lint-fix
 ```
