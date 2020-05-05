@@ -1,4 +1,3 @@
-import 'nprogress/nprogress.css';
 import NProgress from 'nprogress';
 import Vue from 'vue';
 import VueRouter from 'vue-router';

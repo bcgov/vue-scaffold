@@ -33,7 +33,7 @@ loadConfig();
  * @param {boolean} kcSuccess is Keycloak initialized successfully?
  */
 function initializeApp(kcSuccess = false) {
-  if (kcSuccess) store.registerModule('auth', auth);
+  if (kcSuccess && !store.hasModule('auth')) store.registerModule('auth', auth);
 
   new Vue({
     router,
