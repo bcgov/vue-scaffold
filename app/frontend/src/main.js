@@ -15,6 +15,7 @@ import vuetify from '@/plugins/vuetify';
 
 Vue.config.productionTip = false;
 
+NProgress.configure({ showSpinner: false });
 NProgress.start();
 
 // Globally register all components with base in the name
