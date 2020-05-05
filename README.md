@@ -57,7 +57,8 @@ The application has the following component dependencies:
 * compression
 * config
 * express
-* keycloak=connect
+* js-yaml
+* keycloak-connect
 * morgan
 * npmlog
 
@@ -86,9 +87,9 @@ We installed the Vuetify framework by running `vue add Vuetify` afterwards.
 The frontend has the following main component dependencies:
 
 * @bcgov/bc-sans
-* @dsb-norge/vue-keycloak-js
 * axios
 * core-js
+* keycloak-js
 * nprogress
 * vue
 * vue-router
