@@ -1,5 +1,7 @@
 module.exports = {
   clearMocks: true,
+  collectCoverage: true,
+  collectCoverageFrom: ['src/**/*.js', '!frontend/**/*.*'],
   moduleFileExtensions: ['js', 'json'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
@@ -9,6 +11,5 @@ module.exports = {
   ],
   testPathIgnorePatterns: ['frontend'],
   testURL: 'http://localhost/',
-  collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.js', '!src/frontend/**/*.*']
+
 };
