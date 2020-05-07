@@ -32,12 +32,12 @@
         </div>
         <div v-else-if="type === 'CONTINUE'">
           <v-btn class="mb-5 mr-5" outlined @click="closeDialog">
-            <slot name="button-text">
+            <slot name="button-text-cancel">
               <span>Cancel</span>
             </slot>
           </v-btn>
           <v-btn class="mb-5" color="primary" depressed @click="continueDialog">
-            <slot name="button-text">
+            <slot name="button-text-continue">
               <span>Continue</span>
             </slot>
           </v-btn>
