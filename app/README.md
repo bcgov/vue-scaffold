@@ -1,10 +1,10 @@
-# Vue Skeleton Application
+# Vue Scaffold Application
 
-This node.js skeleton app hosts the Vue Skeleton frontend. It implements a minimal endpoint to allow for Keycloak authentication.
+This node.js scaffold app hosts the Vue scaffold frontend. It implements a minimal endpoint to allow for Keycloak authentication.
 
 ## Configuration
 
-The Vue Skeleton App will require some configuration. The API will be locked down and require a valid JWT Token to access. We will need to configure the application to authenticate using the same Keycloak realm as the [frontend](frontend). Note that the Vue Skeleton Frontend is currently designed to expect all associated resources to be relative to the original access path.
+The Vue scaffold app will require some configuration. The API will be locked down and require a valid JWT Token to access. We will need to configure the application to authenticate using the same Keycloak realm as the [frontend](frontend). Note that the Vue scaffold frontend is currently designed to expect all associated resources to be relative to the original access path.
 
 ## Super Quickstart
 
