@@ -1,5 +1,5 @@
 {
-  "name": "vue-skeleton-frontend",
+  "name": "vue-scaffold-frontend",
   "version": "1.0.0",
   "private": true,
   "license": "Apache-2.0",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@bcgov/bc-sans": "^1.0.1",
-    "axios": "^0.19.2",
+    "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "keycloak-js": "^10.0.2",
     "nprogress": "^0.2.0",
@@ -45,7 +45,7 @@
     "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
     "sass": "^1.26.10",
-    "sass-loader": "^9.0.2",
+    "sass-loader": "^10.0.2",
     "vue-cli-plugin-vuetify": "^2.0.7",
     "vue-template-compiler": "^2.6.11",
     "vuetify-loader": "^1.6.0"
