@@ -3,7 +3,7 @@
     "apiPath": "api/v1",
     "basePath" : "/app",
     "keycloak": {
-      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+      "serverUrl": "https://dev.oidc.gov.bc.ca/auth"
     }
   },
   "server": {
@@ -11,7 +11,7 @@
     "basePath" : "/app",
     "bodyLimit": "30mb",
     "keycloak": {
-      "serverUrl": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+      "serverUrl": "https://dev.oidc.gov.bc.ca/auth"
     },
     "logLevel": "debug",
     "morganFormat": "combined",
@@ -20,12 +20,12 @@
   "serviceClient": {
     "commonServices": {
       "ches": {
-        "endpoint": "https://ches-master-9f0fbe-dev.pathfinder.gov.bc.ca/api"
+        "endpoint": "https://ches-dev.pathfinder.gov.bc.ca/api"
       },
       "cdogs": {
-        "endpoint": "https://cdogs-master-idcqvl-dev.pathfinder.gov.bc.ca/api"
+        "endpoint": "https://cdogs-dev.pathfinder.gov.bc.ca/api"
       },
-      "tokenEndpoint": "https://sso-dev.pathfinder.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token"
+      "tokenEndpoint": "https://dev.oidc.gov.bc.ca/auth/realms/jbd6rnxw/protocol/openid-connect/token"
     }
   }
 }
