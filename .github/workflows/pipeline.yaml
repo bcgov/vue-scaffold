@@ -29,11 +29,11 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: '**/app/node_modules'
-          key: ${{ runner.os }}-build-app-${{ env.cache-name }}-${{ hashFiles('**/app/package-lock.json') }}
+          path: "**/app/node_modules"
+          key: ${{ runner.os }}-app-${{ env.cache-name }}-${{ hashFiles('**/app/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-app-${{ env.cache-name }}-
-            ${{ runner.os }}-build-app-
+            ${{ runner.os }}-app-${{ env.cache-name }}-
+            ${{ runner.os }}-app-
             ${{ runner.os }}-
       - name: Install dependencies
         if: steps.cache-app.outputs.cache-hit != 'true'
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: app
+        working-directory: app/frontend
     strategy:
       matrix:
         node-version:
@@ -67,11 +67,11 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: '**/frontend/node_modules'
-          key: ${{ runner.os }}-build-frontend-${{ env.cache-name }}-${{ hashFiles('**/frontend/package-lock.json') }}
+          path: "**/frontend/node_modules"
+          key: ${{ runner.os }}-frontend-${{ env.cache-name }}-${{ hashFiles('**/frontend/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-frontend-${{ env.cache-name }}-
-            ${{ runner.os }}-build-frontend-
+            ${{ runner.os }}-frontend-${{ env.cache-name }}-
+            ${{ runner.os }}-frontend-
             ${{ runner.os }}-
       - name: Install dependencies
         if: steps.cache-frontend.outputs.cache-hit != 'true'
