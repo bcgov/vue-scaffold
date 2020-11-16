@@ -9,6 +9,7 @@ jobs:
     defaults:
       run:
         working-directory: app
+    timeout-minutes: 10
     strategy:
       matrix:
         node-version:
@@ -47,6 +48,7 @@ jobs:
     defaults:
       run:
         working-directory: app/frontend
+    timeout-minutes: 10
     strategy:
       matrix:
         node-version:
