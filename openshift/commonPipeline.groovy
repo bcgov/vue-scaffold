@@ -171,22 +171,23 @@ def notifyStageStatus(String name, String status) {
 
 // Create deployment status and pass to Jenkins-GitHub library
 def createDeploymentStatus(String environment, String status, String jobName, String hostEnv, String pathEnv) {
-  def task = (JOB_BASE_NAME.startsWith('PR-')) ? "deploy:pull:${CHANGE_ID}" : "deploy:${jobName}"
-  def ghDeploymentId = new GitHubHelper().createDeployment(
-    this,
-    SOURCE_REPO_REF,
-    [
-      'environment': environment,
-      'task': task
-    ]
-  )
+  // library createDeploymentStatus is busted - skipping for now
+  // def task = (JOB_BASE_NAME.startsWith('PR-')) ? "deploy:pull:${CHANGE_ID}" : "deploy:${jobName}"
+  // def ghDeploymentId = new GitHubHelper().createDeployment(
+  //   this,
+  //   SOURCE_REPO_REF,
+  //   [
+  //     'environment': environment,
+  //     'task': task
+  //   ]
+  // )
 
-  new GitHubHelper().createDeploymentStatus(
-    this,
-    ghDeploymentId,
-    status,
-    ['targetUrl': "https://${hostEnv}${pathEnv}"]
-  )
+  // new GitHubHelper().createDeploymentStatus(
+  //   this,
+  //   ghDeploymentId,
+  //   status,
+  //   ['targetUrl': "https://${hostEnv}${pathEnv}"]
+  // )
 
   if (status.equalsIgnoreCase('SUCCESS')) {
     echo "${environment} deployment successful at https://${hostEnv}${pathEnv}"
