@@ -11,7 +11,6 @@
     "lint": "vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
     "pretest": "npm run lint",
-    "posttest": "node ./lcov-fix.js",
     "clean": "rm -rf coverage dist **/e2e/videos",
     "purge": "rm -rf node_modules",
     "rebuild": "npm run clean && npm run build",

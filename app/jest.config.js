@@ -12,5 +12,4 @@ module.exports = {
   testPathIgnorePatterns: ['frontend'],
   testResultsProcessor: 'jest-sonar-reporter',
   testURL: 'http://localhost/',
-
 };
