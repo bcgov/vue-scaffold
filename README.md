@@ -1,6 +1,10 @@
 
 # Vue Keycloak Scaffold [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![img](https://img.shields.io/badge/Lifecycle-Stable-97ca00)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
+![Tests](https://github.com/bcgov/vue-scaffold/workflows/Tests/badge.svg)
+[![Maintainability](https://api.codeclimate.com/v1/badges/e7f26d580793ba73b7f7/maintainability)](https://codeclimate.com/github/bcgov/vue-scaffold/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/e7f26d580793ba73b7f7/test_coverage)](https://codeclimate.com/github/bcgov/vue-scaffold/test_coverage)
+
 A clean Vue Keycloak full-stack scaffold example
 
 ## Directory Structure
@@ -20,7 +24,6 @@ A clean Vue Keycloak full-stack scaffold example
     Jenkinsfile                - Top-level Pipeline
     Jenkinsfile.cicd           - Pull-Request Pipeline
     LICENSE                    - License
-    sonar-project.properties   - SonarQube configuration
 
 ## Documentation
 
