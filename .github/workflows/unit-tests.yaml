@@ -44,8 +44,8 @@ jobs:
         env:
           CI: true
       - name: Save Coverage Results
+        if: github.ref == 'refs/heads/master' && matrix.node-version == '14.x'
         uses: actions/upload-artifact@v2
-        if: matrix.node-version == '14.x'
         with:
           name: coverage-app
           path: ${{ github.workspace }}/app/coverage
@@ -90,13 +90,14 @@ jobs:
         env:
           CI: true
       - name: Save Coverage Results
+        if: github.ref == 'refs/heads/master' && matrix.node-version == '14.x'
         uses: actions/upload-artifact@v2
-        if: matrix.node-version == '14.x'
         with:
           name: coverage-frontend
           path: ${{ github.workspace }}/app/frontend/coverage
           retention-days: 1
   test-coverage:
+    if: github.ref == 'refs/heads/master'
     needs:
       - test-app
       - test-frontend
