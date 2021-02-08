@@ -5,48 +5,7 @@ import bcgov.GitHubHelper
 // Pipeline Stages
 // ---------------
 
-// Run Tests
-// def runStageTests() {
-//   timeout(time: 10, unit: 'MINUTES') {
-//     parallel(
-//       App: {
-//         dir('app') {
-//           try {
-//             echo 'Installing NPM Dependencies...'
-//             sh 'npm ci'
-
-//             echo 'Linting and Testing App...'
-//             sh 'npm run test'
-
-//             echo 'App Lint Checks and Tests passed'
-//           } catch (e) {
-//             echo 'App Lint Checks and Tests failed'
-//             throw e
-//           }
-//         }
-//       },
-
-//       Frontend: {
-//         dir('app/frontend') {
-//           try {
-//             echo 'Installing NPM Dependencies...'
-//             sh 'npm ci'
-
-//             echo 'Linting and Testing Frontend...'
-//             sh 'npm run test'
-
-//             echo 'Frontend Lint Checks and Tests passed'
-//           } catch (e) {
-//             echo 'Frontend Lint Checks and Tests failed'
-//             throw e
-//           }
-//         }
-//       }
-//     )
-//   }
-// }
-
-// Build Images & SonarQube Report
+// Build Images
 def runStageBuild() {
   openshift.withCluster() {
     openshift.withProject(TOOLS_PROJECT) {
@@ -54,51 +13,34 @@ def runStageBuild() {
         echo "DEBUG - Using project: ${openshift.project()}"
       }
 
-      parallel(
-        App: {
-          try {
-            notifyStageStatus('Build App', 'PENDING')
+      try {
+        notifyStageStatus('Build App', 'PENDING')
 
-            echo "Processing BuildConfig ${REPO_NAME}-app-${JOB_NAME}..."
-            def bcApp = openshift.process('-f',
-              'openshift/app.bc.yaml',
-              "REPO_NAME=${REPO_NAME}",
-              "ROUTE_PATH=${PATH_ROOT}",
-              "JOB_NAME=${JOB_NAME}",
-              "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
-              "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
-            )
+        echo "Processing BuildConfig ${REPO_NAME}-app-${JOB_NAME}..."
+        def bcApp = openshift.process('-f',
+          'openshift/app.bc.yaml',
+          "REPO_NAME=${REPO_NAME}",
+          "ROUTE_PATH=${PATH_ROOT}",
+          "JOB_NAME=${JOB_NAME}",
+          "SOURCE_REPO_URL=${SOURCE_REPO_URL}",
+          "SOURCE_REPO_REF=${SOURCE_REPO_REF}"
+        )
 
-            echo "Building ImageStream..."
-            openshift.apply(bcApp).narrow('bc').startBuild('-w').logs('-f')
+        echo "Building ImageStream..."
+        openshift.apply(bcApp).narrow('bc').startBuild('-w').logs('-f')
 
-            echo "Tagging Image ${REPO_NAME}-app:latest..."
-            openshift.tag("${REPO_NAME}-app:latest",
-              "${REPO_NAME}-app:${JOB_NAME}"
-            )
+        echo "Tagging Image ${REPO_NAME}-app:latest..."
+        openshift.tag("${REPO_NAME}-app:latest",
+          "${REPO_NAME}-app:${JOB_NAME}"
+        )
 
-            echo 'App build successful'
-            notifyStageStatus('Build App', 'SUCCESS')
-          } catch (e) {
-            echo 'App build failed'
-            notifyStageStatus('Build App', 'FAILURE')
-            throw e
-          }
-        },
-
-        // SonarQube: {
-        //   unstash APP_COV_STASH
-        //   unstash FE_COV_STASH
-
-        //   echo 'Performing SonarQube static code analysis...'
-        //   sh """
-        //   sonar-scanner \
-        //     -Dsonar.host.url='${SONARQUBE_URL_INT}' \
-        //     -Dsonar.projectKey='${REPO_NAME}-${JOB_NAME}' \
-        //     -Dsonar.projectName='${APP_NAME} (${JOB_NAME.toUpperCase()})'
-        //   """
-        // }
-      )
+        echo 'App build successful'
+        notifyStageStatus('Build App', 'SUCCESS')
+      } catch (e) {
+        echo 'App build failed'
+        notifyStageStatus('Build App', 'FAILURE')
+        throw e
+      }
     }
   }
 }
