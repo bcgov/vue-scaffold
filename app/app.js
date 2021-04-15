@@ -59,6 +59,15 @@ if (process.env.NODE_ENV !== 'test') {
 // Use Keycloak OIDC Middleware
 app.use(keycloak.middleware());
 
+// Block requests if server is shutting down
+app.use((_req, res, next) => {
+  if (state.shutdown) {
+    new Problem(503, { details: 'Server is shutting down' }).send(res);
+  } else {
+    next();
+  }
+});
+
 // Frontend configuration endpoint
 apiRouter.use('/config', (_req, res, next) => {
   try {
@@ -124,20 +133,33 @@ process.on('unhandledRejection', err => {
   }
 });
 
-/**
- * @function shutdown
- * Begins shutting down this application. It will hard exit after 3 seconds.
- */
-function shutdown() {
-  if (!state.shutdown) {
-    log.info('Received kill signal. Shutting down...');
-    state.shutdown = true;
-    // Wait 3 seconds before hard exiting
-    setTimeout(() => process.exit(), 3000);
-  }
-}
-
+// Graceful shutdown support
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
+process.on('SIGUSR1', shutdown);
+process.on('SIGUSR2', shutdown);
+process.on('exit', () => {
+  log.info('Exiting...');
+});
+
+/**
+ * @function shutdown
+ * Shuts down this application after at least 3 seconds.
+ */
+function shutdown() {
+  log.info('Received kill signal. Shutting down...');
+  // Wait 3 seconds before starting cleanup
+  if (!state.shutdown) setTimeout(cleanup, 3000);
+}
+
+/**
+ * @function cleanup
+ * Cleans up connections in this application.
+ */
+function cleanup() {
+  log.info('Service no longer accepting traffic');
+  state.shutdown = true;
+  process.exit();
+}
 
 module.exports = app;
