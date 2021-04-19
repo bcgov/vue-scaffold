@@ -14,6 +14,7 @@ const v1Router = require('./src/routes/v1');
 
 const apiRouter = express.Router();
 const state = {
+  ready: true, // No dependencies so application is always ready
   shutdown: false
 };
 
@@ -59,10 +60,12 @@ if (process.env.NODE_ENV !== 'test') {
 // Use Keycloak OIDC Middleware
 app.use(keycloak.middleware());
 
-// Block requests if server is shutting down
+// Block requests until service is ready
 app.use((_req, res, next) => {
   if (state.shutdown) {
     new Problem(503, { details: 'Server is shutting down' }).send(res);
+  } else if (!state.ready) {
+    new Problem(503, { details: 'Server is not ready' }).send(res);
   } else {
     next();
   }
