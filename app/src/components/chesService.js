@@ -1,8 +1,8 @@
 const config = require('config');
-const log = require('npmlog');
 
 const ClientConnection = require('./clientConnection');
 const errorToProblem = require('./errorToProblem');
+const log = require('./log');
 
 const SERVICE = 'CHES';
 

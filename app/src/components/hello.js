@@ -1,4 +1,4 @@
-const log = require('npmlog');
+const log = require('./log');
 
 const hello = {
   /**

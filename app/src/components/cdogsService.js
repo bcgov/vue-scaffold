@@ -2,7 +2,7 @@ const config = require('config');
 const crypto = require('crypto');
 const FormData = require('form-data');
 const fs = require('fs-extra');
-const log = require('npmlog');
+const log = require('./log');
 
 const ClientConnection = require('./clientConnection');
 const errorToProblem = require('./errorToProblem');
