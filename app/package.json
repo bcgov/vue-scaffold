@@ -43,6 +43,7 @@
     "express-winston": "^4.1.0",
     "fs-extra": "^10.0.0",
     "js-yaml": "^4.1.0",
+    "jsonwebtoken": "^8.5.1",
     "keycloak-connect": "^12.0.4",
     "winston": "^3.3.3"
   },
