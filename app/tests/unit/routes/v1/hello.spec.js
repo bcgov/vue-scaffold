@@ -1,14 +1,13 @@
 const request = require('supertest');
 
-const helper = require('../../../common/helper');
+const { expressHelper } = require('../../../common/helper');
 const router = require('../../../../src/routes/v1/hello');
 
 const helloComponent = require('../../../../src/components/hello');
 
 // Simple Express Server
 const basePath = '/api/v1/hello';
-const app = helper.expressHelper(basePath, router);
-helper.logHelper();
+const app = expressHelper(basePath, router);
 
 describe(`GET ${basePath}`, () => {
   const getHelloSpy = jest.spyOn(helloComponent, 'getHello');

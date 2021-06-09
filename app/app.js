@@ -1,13 +1,13 @@
 const compression = require('compression');
 const config = require('config');
 const express = require('express');
-const morgan = require('morgan');
 const path = require('path');
 const Problem = require('api-problem');
 const querystring = require('querystring');
 
 const keycloak = require('./src/components/keycloak');
 const log = require('./src/components/log');
+const httpLogger = require('./src/components/log').httpLogger;
 const v1Router = require('./src/routes/v1');
 
 const apiRouter = express.Router();
@@ -23,14 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Skip if running tests
 if (process.env.NODE_ENV !== 'test') {
-  // Add Morgan endpoint logging
-  app.use(morgan(config.get('server.morganFormat'), {
-    // Skip logging kube-probe requests
-    skip: (req) => req.headers['user-agent'] && req.headers['user-agent'].includes('kube-probe'),
-    stream: {
-      write: (msg) => log.http(msg.trim())
-    }
-  }));
+  app.use(httpLogger);
 }
 
 // Use Keycloak OIDC Middleware
