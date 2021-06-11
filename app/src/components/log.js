@@ -7,6 +7,7 @@ const log = createLogger({
   // defaultMeta: { service: 'scaffold' }, // Add default annotation attribute to log output
   exitOnError: false,
   format: format.combine(
+    format.errors({ stack: true }), // Force errors to show stacktrace
     format.timestamp(), // Add ISO timestamp to each entry
     format.json(), // Force output to be in JSON format
   ),

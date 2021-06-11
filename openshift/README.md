@@ -52,7 +52,6 @@ oc create -n $NAMESPACE configmap $APP_NAME-server-config \
   --from-literal=SERVER_KC_REALM=vehizw2t \
   --from-literal=SERVER_KC_SERVERURL=https://dev.oidc.gov.bc.ca/auth \
   --from-literal=SERVER_LOGLEVEL=info \
-  --from-literal=SERVER_MORGANFORMAT=combined \
   --from-literal=SERVER_PORT=8080
 ```
 

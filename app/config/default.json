@@ -14,7 +14,6 @@
       "serverUrl": "https://dev.oidc.gov.bc.ca/auth"
     },
     "logLevel": "debug",
-    "morganFormat": "combined",
     "port": "8080"
   },
   "serviceClient": {

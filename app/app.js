@@ -6,7 +6,7 @@ const Problem = require('api-problem');
 const querystring = require('querystring');
 
 const keycloak = require('./src/components/keycloak');
-const log = require('./src/components/log');
+const log = require('./src/components/log').child({ component: path.parse(module.filename).name });
 const httpLogger = require('./src/components/log').httpLogger;
 const v1Router = require('./src/routes/v1');
 
@@ -72,7 +72,7 @@ app.use(staticFilesPath, express.static(path.join(__dirname, 'frontend/dist')));
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
   if (err.stack) {
-    log.error(err.stack);
+    log.error(err);
   }
 
   if (err instanceof Problem) {
@@ -101,7 +101,7 @@ app.use((req, res) => {
 // Prevent unhandled errors from crashing application
 process.on('unhandledRejection', err => {
   if (err && err.stack) {
-    log.error(err.stack);
+    log.error(err);
   }
 });
 

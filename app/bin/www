@@ -3,9 +3,10 @@
 /** Module dependencies */
 const config = require('config');
 const http = require('http');
+const path = require('path');
 
 const app = require('../app');
-const log = require('../src/components/log');
+const log = require('../src/components/log').child({ component: path.parse(module.filename).name });
 
 /** Normalize a port into a number, string, or false. */
 const normalizePort = val => {

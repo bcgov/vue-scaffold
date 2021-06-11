@@ -1,4 +1,5 @@
-const log = require('./log');
+const path = require('path');
+const log = require('./log').child({ component: path.parse(module.filename).name });
 
 const hello = {
   /**
@@ -8,7 +9,7 @@ const hello = {
    */
   getHello: () => {
     const value = 'Hello World!';
-    log.info('hello.getHello', value);
+    log.info(value, { function: 'getHello' });
     return value;
   }
 };
