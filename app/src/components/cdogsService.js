@@ -2,11 +2,10 @@ const config = require('config');
 const crypto = require('crypto');
 const FormData = require('form-data');
 const fs = require('fs-extra');
-const path = require('path');
 
 const ClientConnection = require('./clientConnection');
 const errorToProblem = require('./errorToProblem');
-const log = require('./log').child({ component: path.parse(module.filename).name });
+const log = require('./log')(module.filename);
 
 const SERVICE = 'CDOGS';
 

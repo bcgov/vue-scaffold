@@ -6,7 +6,7 @@ const Problem = require('api-problem');
 const querystring = require('querystring');
 
 const keycloak = require('./src/components/keycloak');
-const log = require('./src/components/log').child({ component: path.parse(module.filename).name });
+const log = require('./src/components/log')(module.filename);
 const httpLogger = require('./src/components/log').httpLogger;
 const v1Router = require('./src/routes/v1');
 

@@ -1,9 +1,8 @@
 const axios = require('axios');
 const oauth = require('axios-oauth-client');
-const path = require('path');
 const tokenProvider = require('axios-token-interceptor');
 
-const log = require('./log').child({ component: path.parse(module.filename).name });
+const log = require('./log')(module.filename);
 
 class ClientConnection {
   constructor({ tokenUrl, clientId, clientSecret }) {

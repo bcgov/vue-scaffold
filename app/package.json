@@ -45,7 +45,8 @@
     "js-yaml": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "keycloak-connect": "^12.0.4",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "winston-transport": "^4.4.0"
   },
   "devDependencies": {
     "eslint": "^7.27.0",

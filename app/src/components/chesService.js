@@ -1,9 +1,8 @@
 const config = require('config');
-const path = require('path');
 
 const ClientConnection = require('./clientConnection');
 const errorToProblem = require('./errorToProblem');
-const log = require('./log').child({ component: path.parse(module.filename).name });
+const log = require('./log')(module.filename);
 
 const SERVICE = 'CHES';
 

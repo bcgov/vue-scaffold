@@ -1,5 +1,4 @@
-const path = require('path');
-const log = require('./log').child({ component: path.parse(module.filename).name });
+const log = require('./log')(module.filename);
 
 const hello = {
   /**

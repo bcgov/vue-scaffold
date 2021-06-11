@@ -1,7 +1,6 @@
-const path = require('path');
 const Problem = require('api-problem');
 
-const log = require('./log').child({ component: path.parse(module.filename).name });
+const log = require('./log')(module.filename);
 
 module.exports = function(service, e) {
   if (e.response) {
