@@ -13,7 +13,7 @@
       </v-col>
 
       <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">What's next?</h2>
+        <h2 class="text-h5 font-weight-bold mb-3">What's next?</h2>
         <v-row justify="center">
           <a
             v-for="(next, i) in whatsNext"
@@ -26,7 +26,7 @@
       </v-col>
 
       <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">Important Links</h2>
+        <h2 class="text-h5 font-weight-bold mb-3">Important Links</h2>
         <v-row justify="center">
           <a
             v-for="(link, i) in importantLinks"
@@ -39,7 +39,7 @@
       </v-col>
 
       <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-3">Ecosystem</h2>
+        <h2 class="text-h5 font-weight-bold mb-3">Ecosystem</h2>
         <v-row justify="center">
           <a
             v-for="(eco, i) in ecosystem"

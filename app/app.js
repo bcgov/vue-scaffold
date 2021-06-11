@@ -1,15 +1,13 @@
 const compression = require('compression');
 const config = require('config');
 const express = require('express');
-const fs = require('fs');
-const log = require('npmlog');
-const morgan = require('morgan');
 const path = require('path');
 const Problem = require('api-problem');
 const querystring = require('querystring');
-const Writable = require('stream').Writable;
 
 const keycloak = require('./src/components/keycloak');
+const log = require('./src/components/log')(module.filename);
+const httpLogger = require('./src/components/log').httpLogger;
 const v1Router = require('./src/routes/v1');
 
 const apiRouter = express.Router();
@@ -23,38 +21,9 @@ app.use(compression());
 app.use(express.json({ limit: config.get('server.bodyLimit') }));
 app.use(express.urlencoded({ extended: true }));
 
-// Logging Setup
-log.level = config.get('server.logLevel');
-log.addLevel('debug', 1500, { fg: 'cyan' });
-
-let logFileStream;
-let teeStream;
-if (config.has('server.logFile')) {
-  // Write to logFile in append mode
-  logFileStream = fs.createWriteStream(config.get('server.logFile'), { flags: 'a' });
-  teeStream = new Writable({
-    objectMode: true,
-    write: (data, _, done) => {
-      process.stdout.write(data);
-      logFileStream.write(data);
-      done();
-    }
-  });
-  log.disableColor();
-  log.stream = teeStream;
-}
-
 // Skip if running tests
 if (process.env.NODE_ENV !== 'test') {
-  const morganOpts = {
-    // Skip logging kube-probe requests
-    skip: (req) => req.headers['user-agent'] && req.headers['user-agent'].includes('kube-probe')
-  };
-  if (config.has('server.logFile')) {
-    morganOpts.stream = teeStream;
-  }
-  // Add Morgan endpoint logging
-  app.use(morgan(config.get('server.morganFormat'), morganOpts));
+  app.use(httpLogger);
 }
 
 // Use Keycloak OIDC Middleware
@@ -103,7 +72,7 @@ app.use(staticFilesPath, express.static(path.join(__dirname, 'frontend/dist')));
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
   if (err.stack) {
-    log.error(err.stack);
+    log.error(err);
   }
 
   if (err instanceof Problem) {
@@ -132,7 +101,7 @@ app.use((req, res) => {
 // Prevent unhandled errors from crashing application
 process.on('unhandledRejection', err => {
   if (err && err.stack) {
-    log.error(err.stack);
+    log.error(err);
   }
 });
 

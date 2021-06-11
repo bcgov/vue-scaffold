@@ -1,4 +1,4 @@
-const log = require('npmlog');
+const log = require('./log')(module.filename);
 
 const hello = {
   /**
@@ -8,7 +8,7 @@ const hello = {
    */
   getHello: () => {
     const value = 'Hello World!';
-    log.info('hello.getHello', value);
+    log.info(value, { function: 'getHello' });
     return value;
   }
 };

@@ -1,7 +1,4 @@
-const helper = require('../../common/helper');
 const hello = require('../../../src/components/hello');
-
-helper.logHelper();
 
 describe('getHello', () => {
   it('should return a string', () => {
