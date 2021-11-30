@@ -31,29 +31,29 @@
     "frontend:purge": "cd frontend && npm run purge"
   },
   "dependencies": {
-    "api-problem": "^7.0.2",
-    "axios": "^0.21.1",
-    "axios-oauth-client": "^1.4.2",
+    "api-problem": "^7.0.3",
+    "axios": "^0.24.0",
+    "axios-oauth-client": "^1.4.4",
     "axios-token-interceptor": "^0.2.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "config": "^3.3.6",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
-    "express-winston": "^4.1.0",
+    "express-winston": "^4.2.0",
     "fs-extra": "^10.0.0",
     "js-yaml": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
-    "keycloak-connect": "^12.0.4",
+    "keycloak-connect": "^15.0.2",
     "winston": "^3.3.3",
     "winston-transport": "^4.4.0"
   },
   "devDependencies": {
-    "eslint": "^7.27.0",
+    "eslint": "^8.3.0",
     "eslint-config-recommended": "^4.1.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "jest": "^27.0.4",
-    "nodemon": "^2.0.7",
-    "supertest": "^6.1.3"
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.4.2",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.1.6"
   }
 }
