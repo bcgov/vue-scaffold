@@ -1,5 +1,5 @@
 <template>
-  <nav class="navigation-main">
+  <nav class="navigation-main d-print-none px-md-16 px-4">
     <div class="container">
       <ul>
         <li>

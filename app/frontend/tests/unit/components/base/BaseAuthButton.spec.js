@@ -19,6 +19,7 @@ describe('BaseAuthButton.vue', () => {
   beforeAll(() => {
     delete window.location;
     window.location = {
+      pathname: '/',
       replace: mockReplace
     };
   });
