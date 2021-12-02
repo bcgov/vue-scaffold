@@ -11,6 +11,19 @@ localVue.use(Vuex);
 
 const zeroUuid = '00000000-0000-0000-0000-000000000000';
 
+const keycloakHelper = (mockKcObject) => {
+  // TODO: Find better way to set up keycloak object mock without deleting first
+  if (Vue.prototype.$keycloak) {
+    delete Vue.prototype.$keycloak;
+  }
+  Object.defineProperty(Vue.prototype, '$keycloak', {
+    configurable: true, // Needed to allow deletions later
+    get() {
+      return mockKcObject;
+    }
+  });
+};
+
 describe('auth getters', () => {
   let authenticated;
   let roles;
@@ -33,6 +46,8 @@ describe('auth getters', () => {
           subject: zeroUuid,
           token: 'token',
           tokenParsed: {
+            email: 'e@mail.com',
+            identity_provider: 'idir',
             realm_access: {},
             resource_access: {
               app: {
@@ -68,6 +83,20 @@ describe('auth getters', () => {
     expect(store.getters.createLogoutUrl()).toMatch('logoutUrl');
   });
 
+  it('email should return a string', () => {
+    expect(store.getters.email).toBeTruthy();
+    expect(store.getters.email).toMatch('e@mail.com');
+  });
+
+  it('email should return an empty string', () => {
+    keycloakHelper({
+      tokenParsed: undefined
+    });
+
+    expect(store.getters.email).toBeFalsy();
+    expect(store.getters.email).toEqual('');
+  });
+
   it('fullName should return a string', () => {
     expect(store.getters.fullName).toBeTruthy();
     expect(store.getters.fullName).toMatch('fName');
@@ -98,25 +127,23 @@ describe('auth getters', () => {
 
   it('hasResourceRoles should return false when resource does not exist', () => {
     authenticated = true;
-    roles = [AppRoles.TESTROLE];
+    roles = ['non-existent-role'];
 
-    // TODO: Find better way to set up keycloak object mock without deleting first
-    delete Vue.prototype.$keycloak;
-    Object.defineProperty(Vue.prototype, '$keycloak', {
-      configurable: true, // Needed to allow deletions later
-      get() {
-        return {
-          authenticated: authenticated,
-          tokenParsed: {
-            realm_access: {},
-            resource_access: {}
-          }
-        };
+    keycloakHelper({
+      authenticated: authenticated,
+      tokenParsed: {
+        realm_access: {},
+        resource_access: {}
       }
     });
 
     expect(store.getters.authenticated).toBeTruthy();
     expect(store.getters.hasResourceRoles('app', roles)).toBeFalsy();
+  });
+
+  it('identityProvider should return a string', () => {
+    expect(store.getters.identityProvider).toBeTruthy();
+    expect(typeof store.getters.identityProvider).toBe('string');
   });
 
   it('keycloakReady should return a boolean', () => {
@@ -135,6 +162,15 @@ describe('auth getters', () => {
   it('realmAccess should return an object', () => {
     expect(store.getters.realmAccess).toBeTruthy();
     expect(typeof store.getters.realmAccess).toBe('object');
+  });
+
+  it('realmAccess should return a string', () => {
+    const uri = 'http://foo.bar';
+    store.replaceState({ redirectUri: uri });
+
+    expect(store.getters.redirectUri).toBeTruthy();
+    expect(typeof store.getters.redirectUri).toBe('string');
+    expect(store.getters.redirectUri).toEqual(uri);
   });
 
   it('resourceAccess should return an object', () => {

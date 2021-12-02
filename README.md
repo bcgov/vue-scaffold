@@ -82,7 +82,6 @@ The application is a simple express application, with some basic support for HTT
 The application has the following component dependencies:
 
 * api-problem
-* body-parser
 * compression
 * config
 * express
