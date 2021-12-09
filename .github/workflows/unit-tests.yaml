@@ -46,7 +46,7 @@ jobs:
         env:
           CI: true
       - name: Save Coverage Results
-        if: matrix.node-version == '14.x'
+        if: matrix.node-version == '16.x'
         uses: actions/upload-artifact@v2
         with:
           name: coverage-app
@@ -94,7 +94,7 @@ jobs:
         env:
           CI: true
       - name: Save Coverage Results
-        if: matrix.node-version == '14.x'
+        if: matrix.node-version == '16.x'
         uses: actions/upload-artifact@v2
         with:
           name: coverage-frontend
