@@ -1,16 +1,13 @@
 name: Docker CD
 
-on:
+on: 
   push:
-    paths:
-    - "**Dockerfile**"
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
     steps:
     - uses: actions/checkout@v2
     - name: npm install and build webpack
@@ -25,9 +22,6 @@ jobs:
   Build-and-Push-Docker-Image:
     runs-on: ubuntu-latest
     needs: build
-    defaults:
-      run:
-        working-directory: app
     name: Docker Build, Tag, Push
 
     steps:
