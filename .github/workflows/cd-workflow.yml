@@ -20,7 +20,7 @@ jobs:
     - uses: actions/upload-artifact@main
       with:
         name: webpack artifacts
-        path: /frontend/dist
+        path: dist
 
   Build-and-Push-Docker-Image:
     runs-on: ubuntu-latest
