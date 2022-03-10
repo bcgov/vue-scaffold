@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <h1 class="my-6 text-center">Welcome to Vuetify</h1>
+    <h1 class="my-6 text-center">
+      Welcome to Vuetify - Now deployed with GitHub Actions
+    </h1>
     <HelloWorld />
   </v-container>
 </template>
@@ -10,7 +12,7 @@ import HelloWorld from '@/components/HelloWorld.vue';
 export default {
   name: 'Home',
   components: {
-    HelloWorld
-  }
+    HelloWorld,
+  },
 };
 </script>
