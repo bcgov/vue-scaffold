@@ -1,13 +1,12 @@
-# syntax=docker/dockerfile:1
+FROM docker.io/node:16.13.2-alpine
 
-FROM node:16.13.2
-
-ENV NODE_ENV=production
-
-WORKDIR app
-
-RUN npm run all:install
-
-RUN npm run build
-
-CMD [ "npm", "run", "serve" ]
+ENV NO_UPDATE_NOTIFIER=true
+WORKDIR /opt/app-root/src/app
+COPY . /opt/app-root/src
+RUN npm run all:ci \
+  && npm run all:build \
+  && npm run frontend:purge \
+  && npm run components:clean \
+  && npm run components:purge
+EXPOSE 8000
+CMD ["npm", "run", "start"]
