@@ -32,7 +32,7 @@ jobs:
       uses: redhat-actions/openshift-tools-installer@v1
       with:
         oc: 4
-
+    
     - name: Log in to OpenShift
       uses: redhat-actions/oc-login@v1
       with:
@@ -41,6 +41,6 @@ jobs:
         insecure_skip_tls_verify: true
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}
 
-      - name: Update deployment config
-        run: |
-          echo "Placeholder line for oc apply"
+    - name: Update deployment config
+      run: |
+        echo "Placeholder line for oc apply"

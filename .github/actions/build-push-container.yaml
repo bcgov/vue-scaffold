@@ -10,11 +10,17 @@ env:
 
   # Edit to specify custom tags for the container image, or default tags will be generated below
   IMAGE_TAGS: ""
-
-on:
-  push:
-    # Edit the branch(es) you want to build and deploy on each push
-    branches: [ master ]
+  
+outputs:
+  image_tag:
+    description: "Image Tag"
+    value: ${{ steps.values.outputs.image_tag }}
+  image_version:
+    description: "Image Version"
+    value: ${{ steps.values.outputs.image_version }}
+  buildtime:
+    description: "Build Time"
+    value: ${{ steps.values.outputs.buildtime }}
 
 jobs:
   build-push:
@@ -55,3 +61,9 @@ jobs:
         username: ${{ env.IMAGE_REGISTRY_USER }}
         password: ${{ env.IMAGE_REGISTRY_PASSWORD }}
    
+    - name: Print outputs
+      shell: bash
+      run: |
+        echo "::set-output name=image_tag::${{ fromJSON(steps.meta.outputs.json).tags[0] }}"
+        echo "::set-output name=image_version::${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}"
+        echo "::set-output name=buildtime::${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}"
