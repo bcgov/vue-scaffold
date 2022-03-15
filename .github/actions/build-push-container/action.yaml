@@ -1,16 +1,16 @@
 name: Build & Push Container
 description: Build container from Dockerfile and pushes to registry
 inputs:
+  context:
+    required: true
+    type: string
   image_name:
     required: true
     type: string
   registry:
-    required: false
-    type: string
-    default: ghcr.io
-  repository_owner:
     required: true
     type: string
+    default: ghcr.io
   registry_username:
     required: true
     type: string
@@ -34,40 +34,33 @@ runs:
     - name: Check out repository
       uses: actions/checkout@v2
         
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ inputs.registry}}
+        username: ${{ inputs.registry_username}}
+        password: ${{ inputs.registry_password }}
+
     - name: Prepare docker tags for image
       id: meta
       uses: docker/metadata-action@v3
       with:
+        images: ${{ inputs.registry }}/${{ inputs.image_name }}
         tags: type=sha
-        
-    - name: Print image information
-      shell: bash
-      run: |
-        echo "image_name ${{ inputs.image_name }}"
-        echo "tags ${{ steps.meta.outputs.tags }}"
-        echo "labels ${{ steps.meta.outputs.labels }}"
-        
-    - name: Build from Dockerfile
-      id: build-image
-      uses: redhat-actions/buildah-build@v2
+
+    - name: Build and push image
+      id: builder
+      uses: docker/build-push-action@v2
       with:
-        image: ${{ inputs.image_name }}
+        context: ${{ inputs.context }}
+        push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        dockerfiles: |
-          ./Dockerfile
 
-    - name: Push to registry
-      id: push-image
-      uses: redhat-actions/push-to-registry@v2
-      with:
-        image: ${{ steps.build-image.outputs.image }}
-        tags: ${{ steps.build-image.outputs.tags }}
-        registry: ${{ inputs.registry }}/${{ inputs.repository_owner }}
-        username: ${{ inputs.registry_username }}
-        password: ${{ inputs.registry_password }}
-   
-    - name: Print outputs
+    - id: values  
       shell: bash
       run: |
         echo "::set-output name=image_tag::${{ fromJSON(steps.meta.outputs.json).tags[0] }}"
