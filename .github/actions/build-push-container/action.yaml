@@ -1,12 +1,29 @@
 name: Build & Push Container
+description: Build container from Dockerfile and pushes to registry
+inputs:
+  image_name:
+    required: true
+    type: string
+  registry:
+    required: false
+    type: string
+    default: ghcr.io
+  repository_owner:
+    required: true
+    type: string
+  registry_password:
+  registry_username:
+    required: true
+    type: string
+  registry_password:
+    required: true
 
 env:
-  APP_NAME: "vue-scaffold"
+  IMAGE_NAME: ${{ inputs.context }}
 
-  # Edit to change the image registry settings
-  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-  IMAGE_REGISTRY_USER: ${{ github.actor }}
-  IMAGE_REGISTRY_PASSWORD: ${{ github.token }}
+  IMAGE_REGISTRY: ${{ inputs.registry }}/${{ inputs.repository_owner }}
+  IMAGE_REGISTRY_USER: ${{ inputs.registry_username }}
+  IMAGE_REGISTRY_PASSWORD: ${{ inputs.registry_password }}
 
   # Edit to specify custom tags for the container image, or default tags will be generated below
   IMAGE_TAGS: ""
@@ -31,11 +48,6 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
-    
-    - name: Determine app name
-      if: env.APP_NAME == ''
-      run: |
-        echo "APP_NAME=$(basename $PWD)" | tee -a $GITHUB_ENV
 
     - name: Determine image tags
       if: env.IMAGE_TAGS == ''
@@ -46,7 +58,7 @@ jobs:
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
-        image: ${{ env.APP_NAME }}
+        image: ${{ env.IMAGE_NAME }}
         tags: ${{ env.IMAGE_TAGS }}
         dockerfiles: |
           ./Dockerfile

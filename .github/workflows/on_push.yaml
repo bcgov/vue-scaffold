@@ -1,6 +1,7 @@
 name: Push
 
 env:
+  APP_NAME: "vue-scaffold"
   OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
   OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
   OPENSHIFT_NAMESPACE: "1dca6b-dev"
@@ -19,6 +20,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build & push container
         uses: ./.github/actions/build-push-container
+        with:
+          image_name: ${{ env.APP_NAME }}
+          repository_owner: ${{ github.repository_owner }}
+          registry_username: ${{ github.repository_owner }}
+          registry_password: ${{ secrets.GITHUB_TOKEN }}
     outputs:
       image_tag: ${{ steps.builder.outputs.image_tag }}
       image_version: ${{ steps.builder.outputs.image_version }}
