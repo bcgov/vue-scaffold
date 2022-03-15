@@ -23,8 +23,8 @@ jobs:
         with:
           image_name: ${{ env.APP_NAME }}
           repository_owner: ${{ github.repository_owner }}
-          registry_username: ${{ github.repository_owner }}
-          registry_password: ${{ secrets.GITHUB_TOKEN }}
+          registry_username: ${{ github.actor }}
+          registry_password: ${{ github.token }}
     outputs:
       image_tag: ${{ steps.builder.outputs.image_tag }}
       image_version: ${{ steps.builder.outputs.image_version }}
