@@ -15,9 +15,10 @@ jobs:
     name: Build
     runs-on: ubuntu-18.04
     if: github.repository_owner == 'kamorel' && github.ref == 'refs/heads/master'
-    steps:             
+    steps:       
+      - uses: actions/checkout@v2
       - name: Build & push container
-        uses: ./.github/actions/build-push-container
+          uses: ./.github/actions/build-push-container
     outputs:
       image_tag: ${{ steps.builder.outputs.image_tag }}
       image_version: ${{ steps.builder.outputs.image_version }}
