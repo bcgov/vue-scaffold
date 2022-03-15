@@ -35,6 +35,7 @@ runs:
       uses: actions/checkout@v2
 
     - name: Determine image tags
+      shell: bash
       run: |
         echo "latest ${GITHUB_SHA::12}"
         
