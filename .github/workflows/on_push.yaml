@@ -13,7 +13,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     if: github.repository_owner == 'kamorel' && github.ref == 'refs/heads/master'
     steps:             
       - name: Build & push container
@@ -25,7 +25,7 @@ jobs:
 
   deploy_test:
     name: Deploy test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     if: github.repository_owner == 'kamorel' && github.ref == 'refs/heads/test'
     steps: 
     - name: Install oc

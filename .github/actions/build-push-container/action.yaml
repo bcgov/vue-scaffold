@@ -25,7 +25,7 @@ outputs:
 jobs:
   build-push:
     name: Build and push to container registry
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     environment: dev
 
     steps:
