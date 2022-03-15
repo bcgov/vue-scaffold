@@ -1,0 +1,46 @@
+name: Push
+
+env:
+  OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+  OPENSHIFT_NAMESPACE: "1dca6b-dev"
+  
+on:
+  push:
+    # Edit the branch(es) you want to build and deploy on each push
+    branches: [ master ]
+      
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+    if: github.repository_owner == 'bcgov' && github.ref == 'refs/heads/master'
+    steps:             
+      - name: Build & push container
+        uses: ./.github/actions/build-push-container
+    outputs:
+      image_tag: ${{ steps.builder.outputs.image_tag }}
+      image_version: ${{ steps.builder.outputs.image_version }}
+      buildtime: ${{ steps.builder.outputs.buildtime }}
+
+  deploy_test:
+    name: Deploy test
+    runs-on: ubuntu-20.04
+    if: github.repository_owner == 'bcgov' && github.ref == 'refs/heads/test'
+    steps: 
+    - name: Install oc
+      uses: redhat-actions/openshift-tools-installer@v1
+      with:
+        oc: 4
+
+    - name: Log in to OpenShift
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ env.OPENSHIFT_SERVER }}
+        openshift_token: ${{ env.OPENSHIFT_TOKEN }}
+        insecure_skip_tls_verify: true
+        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+
+      - name: Update deployment config
+        run: |
+          echo "Placeholder line for oc apply"

@@ -1,4 +1,4 @@
-name: Build and Push container
+name: Build & Push Container
 
 env:
   APP_NAME: "vue-scaffold"
@@ -17,10 +17,9 @@ on:
     branches: [ master ]
 
 jobs:
-  openshift-ci-cd:
+  build-push:
     name: Build and push to container registry
-    # ubuntu-20.04 can also be used
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     environment: dev
 
     steps:
