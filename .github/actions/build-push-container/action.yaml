@@ -16,16 +16,6 @@ inputs:
     type: string
   registry_password:
     required: true
-
-env:
-  IMAGE_NAME: ${{ inputs.image_name }}
-
-  IMAGE_REGISTRY: ${{ inputs.registry }}/${{ inputs.repository_owner }}
-  IMAGE_REGISTRY_USER: ${{ inputs.registry_username }}
-  IMAGE_REGISTRY_PASSWORD: ${{ inputs.registry_password }}
-
-  # Edit to specify custom tags for the container image, or default tags will be generated below
-  IMAGE_TAGS: ""
   
 outputs:
   image_tag:
@@ -38,27 +28,18 @@ outputs:
     description: "Build Time"
     value: ${{ steps.values.outputs.buildtime }}
 
-jobs:
-  build-push-container:
-    name: Build and push to container registry
-    runs-on: ubuntu-18.04
-    environment: dev
-
-    steps:
+runs:
+  using: "composite"
+  steps:
     - name: Check out repository
       uses: actions/checkout@v2
 
-    - name: Determine image tags
-      if: env.IMAGE_TAGS == ''
-      run: |
-        echo "IMAGE_TAGS=latest ${GITHUB_SHA::12}" | tee -a $GITHUB_ENV
-      
     - name: Build from Dockerfile
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
-        image: ${{ env.IMAGE_NAME }}
-        tags: ${{ env.IMAGE_TAGS }}
+        image: ${{ inputs.image_name }}
+        tags: "latest ${GITHUB_SHA::12}"
         dockerfiles: |
           ./Dockerfile
 
@@ -68,9 +49,9 @@ jobs:
       with:
         image: ${{ steps.build-image.outputs.image }}
         tags: ${{ steps.build-image.outputs.tags }}
-        registry: ${{ env.IMAGE_REGISTRY }}
-        username: ${{ env.IMAGE_REGISTRY_USER }}
-        password: ${{ env.IMAGE_REGISTRY_PASSWORD }}
+        registry: ${{ inputs.registry }}/${{ inputs.repository_owner }}
+        username: ${{ inputs.registry_username }}
+        password: ${{ inputs.registry_password }}
    
     - name: Print outputs
       shell: bash
