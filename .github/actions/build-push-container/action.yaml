@@ -18,7 +18,7 @@ inputs:
     required: true
 
 env:
-  IMAGE_NAME: ${{ inputs.context }}
+  IMAGE_NAME: ${{ inputs.image_name }}
 
   IMAGE_REGISTRY: ${{ inputs.registry }}/${{ inputs.repository_owner }}
   IMAGE_REGISTRY_USER: ${{ inputs.registry_username }}
