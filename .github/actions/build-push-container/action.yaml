@@ -38,8 +38,6 @@ runs:
       id: meta
       uses: docker/metadata-action@v3
       with:
-        images: ${{ inputs.image_name }}
-        flavor: latest=auto
         tags: type=sha
         
     - name: Print image information
