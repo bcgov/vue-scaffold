@@ -42,6 +42,13 @@ runs:
         flavor: latest=auto
         tags: type=sha
         
+    - name: Print image information
+      shell: bash
+      run: |
+        echo "image_name ${{ inputs.image_name }}"
+        echo "tags ${{ steps.meta.outputs.tags }}"
+        echo "labels ${{ steps.meta.outputs.labels }}"
+        
     - name: Build from Dockerfile
       id: build-image
       uses: redhat-actions/buildah-build@v2
