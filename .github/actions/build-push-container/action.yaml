@@ -11,7 +11,6 @@ inputs:
   repository_owner:
     required: true
     type: string
-  registry_password:
   registry_username:
     required: true
     type: string
@@ -40,7 +39,7 @@ outputs:
     value: ${{ steps.values.outputs.buildtime }}
 
 jobs:
-  build-push:
+  build-push-container:
     name: Build and push to container registry
     runs-on: ubuntu-18.04
     environment: dev
