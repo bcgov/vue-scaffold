@@ -39,7 +39,7 @@ runs:
       uses: redhat-actions/buildah-build@v2
       with:
         image: ${{ inputs.image_name }}
-        tags: "latest ${GITHUB_SHA::12}"
+        tags: latest ${GITHUB_SHA::12}
         dockerfiles: |
           ./Dockerfile
 
