@@ -33,18 +33,19 @@ runs:
   steps:
     - name: Check out repository
       uses: actions/checkout@v2
-
-    - name: Determine image tags
-      shell: bash
-      run: |
-        echo "latest ${GITHUB_SHA::12}"
+        
+    - name: Prepare docker tags for image
+      uses: docker/metadata-action@v3
+      with:
+        images: ${{ inputs.registry }}/${{ inputs.image_name }}
+        tags: type=sha
         
     - name: Build from Dockerfile
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
         image: ${{ inputs.image_name }}
-        tags: latest ${GITHUB_SHA::12}
+        tags: ${{ steps.meta.outputs.tags }}
         dockerfiles: |
           ./Dockerfile
 
