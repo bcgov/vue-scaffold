@@ -19,6 +19,7 @@ jobs:
     steps:       
       - uses: actions/checkout@v2
       - name: Build & push container
+        id: builder
         uses: ./.github/actions/build-push-container
         with:
           context: './'
