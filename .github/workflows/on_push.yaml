@@ -4,18 +4,18 @@ env:
   APP_NAME: "vue-scaffold"
   OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
   OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
-  OPENSHIFT_NAMESPACE: "1dca6b-dev"
+  OPENSHIFT_NAMESPACE: "1dca6b"
   
 on:
   push:
-    # Edit the branch(es) you want to build and deploy on each push
     branches: [ master ]
       
 jobs:
   build:
     name: Build
+    environment: dev
     runs-on: ubuntu-18.04
-    if: github.repository_owner == 'kamorel' && github.ref == 'refs/heads/master'
+    if: github.repository_owner == 'kamorel'
     steps:       
       - uses: actions/checkout@v2
       - name: Build & push container
@@ -32,10 +32,12 @@ jobs:
       image_version: ${{ steps.builder.outputs.image_version }}
       buildtime: ${{ steps.builder.outputs.buildtime }}
 
-  deploy_test:
+  deploy-test:
     name: Deploy test
+    environment: test
     runs-on: ubuntu-18.04
-    if: github.repository_owner == 'kamorel' && github.ref == 'refs/heads/test'
+    needs: build    
+    if: github.repository_owner == 'kamorel'
     steps: 
     - name: Install oc
       uses: redhat-actions/openshift-tools-installer@v1
@@ -48,8 +50,9 @@ jobs:
         openshift_server_url: ${{ env.OPENSHIFT_SERVER }}
         openshift_token: ${{ env.OPENSHIFT_TOKEN }}
         insecure_skip_tls_verify: true
-        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+        # Can we just add the builder to tools namespace and login there?
+        namespace: ${{ env.OPENSHIFT_NAMESPACE }}-dev
 
     - name: Update deployment config
       run: |
-        echo "Placeholder line for oc apply"
+        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-test -p APP_NAME=${{ env.APP_NAME }} -p ROUTE_HOST=${{ env.APP_NAME }}-test.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=//app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f -

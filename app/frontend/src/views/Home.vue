@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1 class="my-6 text-center">
-      Welcome to Vuetify - Now deployed with GitHub Actions
+      Welcome to Vuetify - Now deployed with GitHub Actions v2
     </h1>
     <HelloWorld />
   </v-container>
