@@ -32,13 +32,14 @@ jobs:
       image_version: ${{ steps.builder.outputs.image_version }}
       buildtime: ${{ steps.builder.outputs.buildtime }}
 
-  deploy-test:
-    name: Deploy test
-    environment: test
+  deploy-dev:
+    name: Deploy dev
+    environment: dev
     runs-on: ubuntu-18.04
     needs: build    
     if: github.repository_owner == 'kamorel'
     steps: 
+    - uses: actions/checkout@v2
     - name: Install oc
       uses: redhat-actions/openshift-tools-installer@v1
       with:
@@ -55,4 +56,30 @@ jobs:
 
     - name: Update deployment config
       run: |
-        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-test -p APP_NAME=${{ env.APP_NAME }} -p ROUTE_HOST=${{ env.APP_NAME }}-test.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=//app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f -
+        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-dev -p APP_NAME=${{ env.APP_NAME }} -p ROUTE_HOST=${{ env.APP_NAME }}-dev.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f -
+        
+  deploy-test:
+    name: Deploy test
+    environment: test
+    runs-on: ubuntu-18.04
+    needs: build    
+    if: github.repository_owner == 'kamorel'
+    steps: 
+    - uses: actions/checkout@v2
+    - name: Install oc
+      uses: redhat-actions/openshift-tools-installer@v1
+      with:
+        oc: 4
+    
+    - name: Log in to OpenShift
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ env.OPENSHIFT_SERVER }}
+        openshift_token: ${{ env.OPENSHIFT_TOKEN }}
+        insecure_skip_tls_verify: true
+        # Can we just add the builder to tools namespace and login there?
+        namespace: ${{ env.OPENSHIFT_NAMESPACE }}-dev
+
+    - name: Update deployment config
+      run: |
+        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-test -p APP_NAME=${{ env.APP_NAME }} -p ROUTE_HOST=${{ env.APP_NAME }}-test.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f -
