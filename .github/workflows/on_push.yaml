@@ -2,8 +2,6 @@ name: Push
 
 env:
   APP_NAME: "vue-scaffold"
-  OPENSHIFT_SERVER: ${{ secrets.OPENSHIFT_SERVER }}
-  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
   OPENSHIFT_NAMESPACE: "1dca6b"
   
 on:
@@ -48,8 +46,8 @@ jobs:
     - name: Log in to OpenShift
       uses: redhat-actions/oc-login@v1
       with:
-        openshift_server_url: ${{ env.OPENSHIFT_SERVER }}
-        openshift_token: ${{ env.OPENSHIFT_TOKEN }}
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+        openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
         insecure_skip_tls_verify: true
         # Can we just add the service account to tools namespace
         #   and provide permissions to all namespaces?
@@ -78,8 +76,8 @@ jobs:
     - name: Log in to OpenShift
       uses: redhat-actions/oc-login@v1
       with:
-        openshift_server_url: ${{ env.OPENSHIFT_SERVER }}
-        openshift_token: ${{ env.OPENSHIFT_TOKEN_TEST }}
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+        openshift_token: ${{ secrets.OPENSHIFT_TOKEN_TEST }}
         insecure_skip_tls_verify: true
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}-test
 
