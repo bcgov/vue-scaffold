@@ -37,7 +37,7 @@ objects:
         spec:
           containers:
             - name: app
-              image: "${IMAGE_REGISTRY}/${APP_NAME}:latest"
+              image: "${IMAGE_REGISTRY}/${APP_NAME}:${IMAGE_TAG}"
               imagePullPolicy: IfNotPresent
               livenessProbe:
                 httpGet:
@@ -158,6 +158,11 @@ parameters:
     displayName: Docker Image Registry
     required: true
     value: ghcr.io/kamorel
+  - name: IMAGE_TAG
+    description: The GitHub commit short SHA
+    displayName: Image Tag
+    required: true
+    value: latest
   - name: NAMESPACE
     description: Target namespace reference (i.e. 'wfezkf-dev')
     displayName: Target Namespace
