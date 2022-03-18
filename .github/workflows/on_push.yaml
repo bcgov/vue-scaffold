@@ -52,14 +52,10 @@ jobs:
         # Can we just add the service account to tools namespace
         #   and provide permissions to all namespaces?
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}-dev
-
-    - name: Generate short sha of commit
-      id: short_sha
-      run: echo "::set-output name=SHA_SHORT::$(git rev-parse --short HEAD)"
         
     - name: Update deployment config
       run: |
-        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-dev -p APP_NAME=${{ env.APP_NAME }} -p IMAGE_TAG=sha-${{ steps.short_sha.outputs.SHA_SHORT }} -p ROUTE_HOST=${{ env.APP_NAME }}-dev.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f -
+        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-dev -p APP_NAME=${{ env.APP_NAME }} -p IMAGE_TAG=sha-$GITHUB_SHA::7 -p ROUTE_HOST=${{ env.APP_NAME }}-dev.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f -
         
   deploy-test:
     name: Deploy test
@@ -80,11 +76,7 @@ jobs:
         openshift_token: ${{ secrets.OPENSHIFT_TOKEN_TEST }}
         insecure_skip_tls_verify: true
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}-test
-
-    - name: Generate short sha of commit
-      id: short_sha
-      run: echo "::set-output name=SHA_SHORT::$(git rev-parse --short HEAD)"
         
     - name: Update deployment config
       run: |
-        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-test -p APP_NAME=${{ env.APP_NAME }} -p IMAGE_TAG=sha-${{ steps.short_sha.outputs.SHA_SHORT }} -p ROUTE_HOST=${{ env.APP_NAME }}-test.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f -
+        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-test -p APP_NAME=${{ env.APP_NAME }} -p IMAGE_TAG=sha-$GITHUB_SHA::7 -p ROUTE_HOST=${{ env.APP_NAME }}-test.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f -
