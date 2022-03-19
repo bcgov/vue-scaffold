@@ -26,8 +26,6 @@ jobs:
           registry: ghcr.io
           registry_username: ${{ github.repository_owner}}
           registry_password: ${{ secrets.GHCR_TOKEN }}
-      - name: Generate short sha of commit
-        run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
     outputs:
       image_tag: ${{ steps.builder.outputs.image_tag }}
       image_version: ${{ steps.builder.outputs.image_version }}
@@ -57,7 +55,7 @@ jobs:
     
     - name: Update deployment config
       run: |
-        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-dev -p APP_NAME=${{ env.APP_NAME }} -p IMAGE_TAG=sha-${{ env.SHORT_SHA }} -p ROUTE_HOST=${{ env.APP_NAME }}-dev.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f -
+        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-dev -p APP_NAME=${{ env.APP_NAME }} -p IMAGE_TAG=sha-$(git rev-parse --short HEAD) -p ROUTE_HOST=${{ env.APP_NAME }}-dev.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-dev -f -
         
   deploy-test:
     name: Deploy test
@@ -81,4 +79,4 @@ jobs:
         
     - name: Update deployment config
       run: |
-        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-test -p APP_NAME=${{ env.APP_NAME }} -p IMAGE_TAG=sha-${{ env.SHORT_SHA }} -p ROUTE_HOST=${{ env.APP_NAME }}-test.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f -
+        oc process -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f ./openshift/app.dc.yaml -p REPO_NAME=${{ env.APP_NAME }} -p JOB_NAME=master -p NAMESPACE=${{ env.OPENSHIFT_NAMESPACE }}-test -p APP_NAME=${{ env.APP_NAME }} -p IMAGE_TAG=sha-$(git rev-parse --short HEAD) -p ROUTE_HOST=${{ env.APP_NAME }}-test.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ env.OPENSHIFT_NAMESPACE }}-test -f -
