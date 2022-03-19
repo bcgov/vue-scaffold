@@ -11,7 +11,7 @@ on:
       
 jobs:
   build:
-    name: Build
+    name: Build & Push to Registry
     environment: dev
     runs-on: ubuntu-18.04
     if: github.repository_owner == 'kamorel'
@@ -32,16 +32,16 @@ jobs:
       buildtime: ${{ steps.builder.outputs.buildtime }}
 
   deploy-dev:
-    name: Deploy dev
+    name: Deploy to Dev
     environment: dev
     runs-on: ubuntu-18.04
     needs: build    
     if: github.repository_owner == 'kamorel'
     steps: 
     - uses: actions/checkout@v2
-    - name: Build & push container
+    - name: Deploy to Dev
       id: builder
-      uses: ./.github/actions/build-push-container
+      uses: ./.github/actions/deploy-to-environment
       with:
         openshift_namespace: ${{ env.OPENSHIFT_NAMESPACE }}
         openshift_environment: dev
@@ -50,7 +50,7 @@ jobs:
         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
         
   deploy-test:
-    name: Deploy test
+    name: Deploy to Test
     environment: test
     runs-on: ubuntu-18.04
     needs:
@@ -58,11 +58,10 @@ jobs:
       - deploy-dev
     if: github.repository_owner == 'kamorel'
     steps: 
-    steps: 
     - uses: actions/checkout@v2
-    - name: Build & push container
+    - name: Deploy to Test
       id: builder
-      uses: ./.github/actions/build-push-container
+      uses: ./.github/actions/deploy-to-environment
       with:
         openshift_namespace: ${{ env.OPENSHIFT_NAMESPACE }}
         openshift_environment: test
