@@ -1,0 +1,41 @@
+name: Deploy to Environment
+description: Deploys an image to the defined environment
+inputs:
+  openshift_namespace:
+    required: true
+    type: string
+  openshift_environment:
+    required: true
+    type: string
+  app_name:
+    required: true
+    type: string
+  openshift_server:
+    required: true
+    type: string
+  openshift_token:
+    required: true
+    type: string
+  
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+    - name: Install oc
+      uses: redhat-actions/openshift-tools-installer@v1
+      with:
+        oc: 4
+    - name: Log in to OpenShift
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ inputs.openshift_server }}
+        openshift_token: ${{ inputs.openshift_token }}
+        insecure_skip_tls_verify: true
+        # Can we just add the service account to tools namespace
+        #   and provide permissions to all namespaces?
+        namespace: ${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }}
+    
+    - name: Update deployment config
+      run: |
+        oc process -n ${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }} -f ./openshift/app.dc.yaml -p REPO_NAME=${{ inputs.app_name }} -p JOB_NAME=master -p NAMESPACE=${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }} -p APP_NAME=${{ inputs.app_name }} -p IMAGE_TAG=sha-$(git rev-parse --short HEAD) -p ROUTE_HOST=${{ inputs.app_name }}-${{ inputs.openshift_environment }}.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }} -f -
+        
