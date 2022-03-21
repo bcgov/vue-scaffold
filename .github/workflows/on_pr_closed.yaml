@@ -1,0 +1,41 @@
+name: Pull Request Closed
+
+env:
+  APP_NAME: "vue-scaffold"
+  OPENSHIFT_NAMESPACE: "1dca6b"
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:    
+      - master
+      
+jobs:
+  remove-pr-dev:
+    name: Remove PR build from namespace
+    environment: dev
+    runs-on: ubuntu-18.04
+    if: github.repository_owner == 'kamorel'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install oc
+      uses: redhat-actions/openshift-tools-installer@v1
+      with:
+        oc: 4
+    - name: Log in to OpenShift
+      uses: redhat-actions/oc-login@v1
+      with:
+        openshift_server_url: ${{ inputs.openshift_server }}
+        openshift_token: ${{ inputs.openshift_token }}
+        insecure_skip_tls_verify: true
+        # Can we just add the service account to tools namespace
+        #   and provide permissions to all namespaces?
+        namespace: ${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }}
+    
+    - name: Update deployment config
+      shell: bash
+      run: |
+        oc delete -n ${{ env.OPENSHIFT_NAMESPACE }}-dev all,secret,networkpolicy,rolebinding --selector app=${{ env.APP_NAME }}-pr-${{github.event.number}}
+        oc delete -n ${{ env.OPENSHIFT_NAMESPACE }}-dev all,svc,cm,sa,role,secret --selector cluster-name=pr-${{github.event.number}}
+        

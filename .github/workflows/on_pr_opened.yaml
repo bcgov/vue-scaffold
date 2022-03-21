@@ -1,4 +1,4 @@
-name: Pull Request
+name: Pull Request Opened
 
 env:
   APP_NAME: "vue-scaffold"
@@ -6,6 +6,9 @@ env:
   
 on:
   pull_request:
+    types:
+      - opened
+      - edited
     branches:    
       - master
       
