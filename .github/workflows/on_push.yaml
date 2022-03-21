@@ -26,6 +26,8 @@ jobs:
           registry: ghcr.io
           registry_username: ${{ github.repository_owner}}
           registry_password: ${{ secrets.GHCR_TOKEN }}
+          registry2_username: ${{ secrets.DOCKER_USERNAME}}
+          registry2_password: ${{ secrets.DOCKER_TOKEN }}
     outputs:
       image_tag: ${{ steps.builder.outputs.image_tag }}
       image_version: ${{ steps.builder.outputs.image_version }}
