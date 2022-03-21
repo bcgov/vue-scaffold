@@ -1,4 +1,4 @@
-name: Push
+name: Pull Request
 
 env:
   APP_NAME: "vue-scaffold-pr-${{github.event.number}}"
@@ -9,8 +9,8 @@ on:
     branches:    
       - master
       
- jobs:
-   build:
+jobs:
+  build:
     name: Build & Push to Registry
     environment: dev
     runs-on: ubuntu-18.04
