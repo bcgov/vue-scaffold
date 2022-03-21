@@ -6,9 +6,6 @@ env:
   
 on:
   push:
-    types:
-      - opened
-      - edited
     branches:
       - master
       
