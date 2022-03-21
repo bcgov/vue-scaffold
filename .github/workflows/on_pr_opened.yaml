@@ -1,7 +1,7 @@
 name: Pull Request
 
 env:
-  APP_NAME: "vue-scaffold-pr-${{github.event.number}}"
+  APP_NAME: "vue-scaffold"
   OPENSHIFT_NAMESPACE: "1dca6b"
   
 on:
