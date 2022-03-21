@@ -9,8 +9,7 @@ on:
     types:
       - opened
       - edited
-    branches:    
-      - master
+      
  jobs:
    build:
     name: Build & Push to Registry
