@@ -1,15 +1,15 @@
-name: Push
+name: Pull Request Opened
 
 env:
   APP_NAME: "vue-scaffold"
   OPENSHIFT_NAMESPACE: "1dca6b"
   
 on:
-  push:
+  pull_request:
     types:
       - opened
-      - edited
-    branches:
+      - synchronize
+    branches:    
       - master
       
 jobs:
@@ -34,8 +34,8 @@ jobs:
       image_version: ${{ steps.builder.outputs.image_version }}
       buildtime: ${{ steps.builder.outputs.buildtime }}
 
-  deploy-dev:
-    name: Deploy to Dev
+  deploy-pr-dev:
+    name: Deploy Pull Request to Dev
     environment: dev
     runs-on: ubuntu-18.04
     needs: build    
@@ -49,29 +49,8 @@ jobs:
         openshift_namespace: ${{ env.OPENSHIFT_NAMESPACE }}
         openshift_environment: dev
         app_name: ${{ env.APP_NAME }}
-        job_name: master
-        route_path: /app
+        job_name: pr-${{github.event.number}}
+        route_path: /pr-${{github.event.number}}
         openshift_server: ${{ secrets.OPENSHIFT_SERVER }}
         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
         
-  deploy-test:
-    name: Deploy to Test
-    environment: test
-    runs-on: ubuntu-18.04
-    needs:
-      - build
-      - deploy-dev
-    if: github.repository_owner == 'kamorel'
-    steps: 
-    - uses: actions/checkout@v2
-    - name: Deploy to Test
-      id: builder
-      uses: ./.github/actions/deploy-to-environment
-      with:
-        openshift_namespace: ${{ env.OPENSHIFT_NAMESPACE }}
-        openshift_environment: test
-        app_name: ${{ env.APP_NAME }}
-        job_name: master
-        route_path: /app
-        openshift_server: ${{ secrets.OPENSHIFT_SERVER }}
-        openshift_token: ${{ secrets.OPENSHIFT_TOKEN_TEST }}
