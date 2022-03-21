@@ -13,7 +13,7 @@ on:
       
 jobs:
   remove-pr-dev:
-    name: Remove PR build from namespace
+    name: Remove PR build from dev namespace
     environment: dev
     runs-on: ubuntu-18.04
     if: github.repository_owner == 'kamorel'
@@ -26,12 +26,12 @@ jobs:
     - name: Log in to OpenShift
       uses: redhat-actions/oc-login@v1
       with:
-        openshift_server_url: ${{ inputs.openshift_server }}
-        openshift_token: ${{ inputs.openshift_token }}
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+        openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
         insecure_skip_tls_verify: true
         # Can we just add the service account to tools namespace
         #   and provide permissions to all namespaces?
-        namespace: ${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }}
+        namespace: ${{ env.OPENSHIFT_NAMESPACE }}-dev
     
     - name: Update deployment config
       shell: bash
