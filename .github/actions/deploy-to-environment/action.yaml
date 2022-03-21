@@ -13,6 +13,10 @@ inputs:
   job_name:
     required: true
     type: string
+    default: master
+  route_path:
+    required: true
+    type: string
   openshift_server:
     required: true
     type: string
@@ -41,5 +45,5 @@ runs:
     - name: Update deployment config
       shell: bash
       run: |
-        oc process -n ${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }} -f ./openshift/app.dc.yaml -p REPO_NAME=${{ inputs.app_name }} -p JOB_NAME=${{ inputs.job_name }} -p NAMESPACE=${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }} -p APP_NAME=${{ inputs.app_name }} -p IMAGE_TAG=sha-$(git rev-parse --short HEAD) -p ROUTE_HOST=${{ inputs.app_name }}-${{ inputs.openshift_environment }}.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=/app -o yaml | oc apply -n ${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }} -f -
+        oc process -n ${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }} -f ./openshift/app.dc.yaml -p REPO_NAME=${{ inputs.app_name }} -p JOB_NAME=${{ inputs.job_name }} -p NAMESPACE=${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }} -p APP_NAME=${{ inputs.app_name }} -p IMAGE_TAG=sha-$(git rev-parse --short HEAD) -p ROUTE_HOST=${{ inputs.app_name }}-${{ inputs.openshift_environment }}.apps.silver.devops.gov.bc.ca -p ROUTE_PATH=${{ inputs.route_path }} -o yaml | oc apply -n ${{ inputs.openshift_namespace }}-${{ inputs.openshift_environment }} -f -
         

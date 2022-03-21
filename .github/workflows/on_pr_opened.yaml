@@ -47,6 +47,7 @@ jobs:
         openshift_environment: dev
         app_name: ${{ env.APP_NAME }}
         job_name: pr-${{github.event.number}}
+        route_path: /pr-${{github.event.number}}
         openshift_server: ${{ secrets.OPENSHIFT_SERVER }}
         openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
         
