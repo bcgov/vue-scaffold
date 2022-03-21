@@ -22,7 +22,7 @@ jobs:
         uses: ./.github/actions/build-push-container
         with:
           context: './'
-          image_name: ${{ github.repository_owner}}/${{ env.APP_NAME }}
+          image_name: ${{ github.repository_owner}}/${{ env.APP_NAME }}-pr-${{github.event.number}}
           registry: ghcr.io
           registry_username: ${{ github.repository_owner}}
           registry_password: ${{ secrets.GHCR_TOKEN }}
