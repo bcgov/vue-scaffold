@@ -13,7 +13,7 @@ jobs:
   build:
     name: Build & Push to Registry
     environment: dev
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     if: github.repository_owner == 'kamorel'
     steps:       
       - uses: actions/checkout@v2
@@ -23,11 +23,10 @@ jobs:
         with:
           context: './'
           image_name: ${{ github.repository_owner}}/${{ env.APP_NAME }}
-          registry: ghcr.io
-          registry_username: ${{ github.repository_owner}}
-          registry_password: ${{ secrets.GHCR_TOKEN }}
-          registry2_username: ${{ secrets.DOCKER_USERNAME}}
-          registry2_password: ${{ secrets.DOCKER_TOKEN }}
+          ghcr_username: ${{ github.repository_owner}}
+          ghcr_password: ${{ secrets.GHCR_TOKEN }}
+          docker_username: ${{ secrets.DOCKER_USERNAME}}
+          docker_password: ${{ secrets.DOCKER_TOKEN }}
     outputs:
       image_tag: ${{ steps.builder.outputs.image_tag }}
       image_version: ${{ steps.builder.outputs.image_version }}
@@ -36,7 +35,7 @@ jobs:
   deploy-dev:
     name: Deploy to Dev
     environment: dev
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs: build    
     if: github.repository_owner == 'kamorel'
     steps: 
@@ -56,7 +55,7 @@ jobs:
   deploy-test:
     name: Deploy to Test
     environment: test
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs:
       - build
       - deploy-dev

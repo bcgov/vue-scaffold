@@ -7,19 +7,15 @@ inputs:
   image_name:
     required: true
     type: string
-  registry:
-    required: true
-    type: string
-    default: ghcr.io
-  registry_username:
-    required: true
-    type: string
-  registry_password:
-    required: true
-  registry2_username:
+  docker_username:
     required: false
     type: string
-  registry2_password:
+  docker_password:
+    required: false
+  ghcr_username:
+    required: false
+    type: string
+  ghcr_password:
     required: false
   
 outputs:
@@ -41,27 +37,29 @@ runs:
         
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
-
-    - name: Login to container registry
+      
+    - name: Login to docker container registry
+      if: ${{ inputs.docker_username != '' }}
       uses: docker/login-action@v1
       with:
-        registry: ${{ inputs.registry }}
-        username: ${{ inputs.registry_username }}
-        password: ${{ inputs.registry_password }}
+        username: ${{ inputs.docker_username }}
+        password: ${{ inputs.docker_password }}
         
-    - name: Login to second container registry
+    - name: Login to ghcr container registry
+      if: ${{ inputs.ghcr_username != '' }}
       uses: docker/login-action@v1
       with:
-        username: ${{ inputs.registry2_username }}
-        password: ${{ inputs.registry2_password }}
-
+        registry: ghcr.io
+        username: ${{ inputs.ghcr_username }}
+        password: ${{ inputs.ghcr_password }}
+        
     - name: Prepare Docker tags for image
       id: meta
       uses: docker/metadata-action@v3
       with:
         images: |
-          ${{ inputs.registry }}/${{ inputs.image_name }}
           ${{ inputs.image_name }}
+          ghcr.io/${{ inputs.image_name }}          
         flavor: |
           latest=true
         tags: |
