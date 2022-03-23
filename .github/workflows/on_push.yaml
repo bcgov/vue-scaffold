@@ -23,8 +23,8 @@ jobs:
         with:
           context: './'
           image_name: ${{ github.repository_owner}}/${{ env.APP_NAME }}
-          # docker_username: ${{ secrets.DOCKER_USERNAME}}
-          # docker_password: ${{ secrets.DOCKER_TOKEN }}
+          docker_username: ${{ secrets.DOCKER_USERNAME}}
+          docker_password: ${{ secrets.DOCKER_TOKEN }}
           ghcr_username: ${{ github.repository_owner}}
           ghcr_password: ${{ secrets.GHCR_TOKEN }}
     outputs:

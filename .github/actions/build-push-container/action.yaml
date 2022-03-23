@@ -57,9 +57,7 @@ runs:
       id: meta
       uses: docker/metadata-action@v3
       with:
-        images: |
-          ${{ inputs.image_name }}
-          ghcr.io/${{ inputs.image_name }}          
+        images: ghcr.io/${{ inputs.image_name }}          
         flavor: |
           latest=true
         tags: |
@@ -78,6 +76,13 @@ runs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        
+    - name: Push to Docker
+      if: ${{ inputs.docker_username != '' }}
+      shell: bash
+      run: |
+        docker pull ghcr.io/${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
+        docker push docker.io/${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
 
     - id: values  
       shell: bash
