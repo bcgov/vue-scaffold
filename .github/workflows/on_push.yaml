@@ -29,6 +29,8 @@ jobs:
   push-additional-registries:
     name: Build & Push to additional registries
     environment: dev
+    env:
+      APP_NAME: ${{ env.APP_NAME }}
     runs-on: ubuntu-latest
     needs: build
     strategy:
