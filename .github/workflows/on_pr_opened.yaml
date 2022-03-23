@@ -28,10 +28,6 @@ jobs:
           image_name: ${{ github.repository_owner}}/${{ env.APP_NAME }}
           ghcr_username: ${{ github.repository_owner}}
           ghcr_password: ${{ secrets.GHCR_TOKEN }}
-    outputs:
-      image_tag: ${{ steps.builder.outputs.image_tag }}
-      image_version: ${{ steps.builder.outputs.image_version }}
-      buildtime: ${{ steps.builder.outputs.buildtime }}
 
   deploy-pr-dev:
     name: Deploy Pull Request to Dev

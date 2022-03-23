@@ -11,26 +11,45 @@ on:
       
 jobs:
   build:
-    name: Build & Push to Registry
+    name: Build & Push to GHCR
     environment: dev
     runs-on: ubuntu-latest
     if: github.repository_owner == 'kamorel'
     steps:       
       - uses: actions/checkout@v2
-      - name: Build & push container
+      - name: Build & Push to GHCR
         id: builder
         uses: ./.github/actions/build-push-container
         with:
           context: './'
-          image_name: ${{ github.repository_owner}}/${{ env.APP_NAME }}
-          docker_username: ${{ secrets.DOCKER_USERNAME}}
-          docker_password: ${{ secrets.DOCKER_TOKEN }}
-          ghcr_username: ${{ github.repository_owner}}
-          ghcr_password: ${{ secrets.GHCR_TOKEN }}
-    outputs:
-      image_tag: ${{ steps.builder.outputs.image_tag }}
-      image_version: ${{ steps.builder.outputs.image_version }}
-      buildtime: ${{ steps.builder.outputs.buildtime }}
+          image_name: ${{ github.repository_owner }}/${{ env.APP_NAME }}
+          ghcr_username: ${{ github.repository_owner }}
+          ghcr_token: ${{ secrets.GHCR_TOKEN }}
+          
+  push-additional-registries:
+    name: Build & Push to additional registries
+    environment: dev
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - dest_registry: docker.io
+            dest_username: ${{ secrets.DOCKER_USERNAME }}
+            dest_token: ${{ secrets.DOCKER_TOKEN }}
+            source_registry: ghcr.io
+            dest_username: ${{ github.repository_owner }}
+            dest_token: ${{ secrets.GHCR_TOKEN }}
+            image_name: ${{ github.repository_owner }}/${{ env.APP_NAME }}
+    if: github.repository_owner == 'kamorel'
+    steps:       
+      - uses: actions/checkout@v2
+      - name: Build & Push to registry
+        id: builder
+        uses: ./.github/actions/push-to-registry
+        with:
+          image_name: ${{ matrix.image_name }}
+          username: ${{ matrix.username }}
+          token: ${{ matrix.token }}
 
   deploy-dev:
     name: Deploy to Dev

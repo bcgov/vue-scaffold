@@ -7,27 +7,12 @@ inputs:
   image_name:
     required: true
     type: string
-  docker_username:
-    required: false
-    type: string
-  docker_password:
-    required: false
   ghcr_username:
-    required: false
+    required: true
     type: string
-  ghcr_password:
-    required: false
-  
-outputs:
-  image_tag:
-    description: "Image Tag"
-    value: ${{ steps.values.outputs.image_tag }}
-  image_version:
-    description: "Image Version"
-    value: ${{ steps.values.outputs.image_version }}
-  buildtime:
-    description: "Build Time"
-    value: ${{ steps.values.outputs.buildtime }}
+  ghcr_token:
+    required: true
+    type: string
 
 runs:
   using: "composite"
@@ -44,7 +29,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ inputs.ghcr_username }}
-        password: ${{ inputs.ghcr_password }}
+        password: ${{ inputs.ghcr_token }}
         
     - name: Prepare Docker tags for image
       id: meta
@@ -61,7 +46,7 @@ runs:
           type=semver,pattern={{major}}
           type=sha
 
-    - name: Build and push to registry
+    - name: Build and push to GHCR
       id: builder
       uses: docker/build-push-action@v2
       with:
@@ -69,22 +54,3 @@ runs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        
-    - name: Push to Docker
-      if: ${{ inputs.docker_username != '' }}
-      shell: bash
-      run: |
-        docker login -u ${{ inputs.docker_username }} -p ${{ inputs.docker_password }}
-        docker pull ghcr.io/${{ inputs.image_name }}:latest
-        docker tag ghcr.io/${{ inputs.image_name }}:latest ${{ inputs.image_name }}:latest
-        docker tag ghcr.io/${{ inputs.image_name }}:latest ${{ inputs.image_name }}:master
-        docker tag ghcr.io/${{ inputs.image_name }}:latest ${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
-        docker push --all-tags ${{ inputs.image_name }}
-
-    - id: values  
-      shell: bash
-      run: |
-        echo ${{ steps.meta.outputs.json }}
-        echo "::set-output name=image_tag::${{ fromJSON(steps.meta.outputs.json).tags[0] }}"
-        echo "::set-output name=image_version::${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}"
-        echo "::set-output name=buildtime::${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}"
