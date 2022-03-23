@@ -82,7 +82,7 @@ runs:
       shell: bash
       run: |
         docker pull ghcr.io/${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
-        docker push ${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
+        docker push ${{ inputs.image_name }}
 
     - id: values  
       shell: bash
