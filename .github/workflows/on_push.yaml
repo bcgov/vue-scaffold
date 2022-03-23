@@ -30,6 +30,7 @@ jobs:
     name: Build & Push to additional registries
     environment: dev
     runs-on: ubuntu-latest
+     needs: build
     strategy:
       matrix:
         dest-registry:
@@ -51,11 +52,11 @@ jobs:
         with:
           image_name: ${{ matrix.image_name }}
           source_registry: ${{ matrix.source_registry }}
-          source_username: ${{ secrets.matrix[source_username] }}
-          source_token: ${{ secrets.matrix[source_token] }}
+          source_username: ${{ secrets[matrix.source_username] }}
+          source_token: ${{ secrets[matrix.source_token] }}
           dest_registry: ${{ matrix.dest_registry }}
-          dest_username: ${{ secrets.matrix[dest_username] }}
-          dest_token: ${{ secrets.matrix[dest_token] }}
+          dest_username: ${{ secrets[matrix.dest_username] }}
+          dest_token: ${{ secrets[matrix.dest_token] }}
 
   deploy-dev:
     name: Deploy to Dev
