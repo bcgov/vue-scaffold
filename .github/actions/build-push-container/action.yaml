@@ -76,9 +76,9 @@ runs:
       run: |
         docker login -u ${{ inputs.docker_username }} -p ${{ inputs.docker_password }}
         docker pull ghcr.io/${{ inputs.image_name }}:latest
-        docker tag ghcr.io/$${{ inputs.image_name }}:latest ${{ inputs.image_name }}:latest
-        docker tag ghcr.io/$${{ inputs.image_name }}:latest ${{ inputs.image_name }}:master
-        docker tag ghcr.io/$${{ inputs.image_name }}:latest ${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
+        docker tag ghcr.io/${{ inputs.image_name }}:latest ${{ inputs.image_name }}:latest
+        docker tag ghcr.io/${{ inputs.image_name }}:latest ${{ inputs.image_name }}:master
+        docker tag ghcr.io/${{ inputs.image_name }}:latest ${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
         docker push --all-tags ${{ inputs.image_name }}
 
     - id: values  
