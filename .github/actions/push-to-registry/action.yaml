@@ -49,9 +49,9 @@ runs:
       if: ${{ success() }}
       shell: bash
       run: |
-        docker pull {{ inputs.source_registry }}/${{ inputs.image_name }}:latest
-        docker tag {{ inputs.source_registry }}/${{ inputs.image_name }}:latest {{ inputs.dest_registry }}/${{ inputs.image_name }}:latest
-        docker tag {{ inputs.source_registry }}/${{ inputs.image_name }}:latest {{ inputs.dest_registry }}/${{ inputs.image_name }}:master
-        docker tag {{ inputs.source_registry }}/${{ inputs.image_name }}:latest {{ inputs.dest_registry }}/${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
-        docker push --all-tags {{ inputs.dest_registry }}/${{ inputs.image_name }}
+        docker pull ${{ inputs.source_registry }}/${{ inputs.image_name }}:latest
+        docker tag ${{ inputs.source_registry }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.image_name }}:latest
+        docker tag ${{ inputs.source_registry }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.image_name }}:master
+        docker tag ${{ inputs.source_registry }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
+        docker push --all-tags ${{ inputs.dest_registry }}/${{ inputs.image_name }}
 
