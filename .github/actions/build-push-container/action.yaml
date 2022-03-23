@@ -81,7 +81,7 @@ runs:
       if: ${{ inputs.docker_username != '' }}
       shell: bash
       run: |
-        docker pull ghcr.io/${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
+        docker pull ghcr.io/${{ inputs.image_name }}
         docker image tag ${{ inputs.image_name }} ${{ inputs.image_name }}:latest
         docker image tag ${{ inputs.image_name }} ${{ inputs.image_name }}:master
         docker image tag ${{ inputs.image_name }} ${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
