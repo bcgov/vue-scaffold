@@ -46,7 +46,7 @@ runs:
         password: ${{ inputs.dest_token }}
         
     - name: Pull source & Push to new registry
-      if: ${{ inputs.docker_username != '' }}
+      if: ${{ success() }}
       shell: bash
       run: |
         docker pull {{ inputs.source_registry }}/${{ inputs.image_name }}:latest
