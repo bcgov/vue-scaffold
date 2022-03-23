@@ -34,6 +34,14 @@ jobs:
       matrix:
         dest-registry:
           - docker.io
+        include:
+          - dest_registry: docker.io
+            dest_username: ${{ secrets.DOCKER_USERNAME }}
+            dest_token: ${{ secrets.DOCKER_TOKEN }}
+            source_registry: ghcr.io
+            source_username: ${{ github.repository_owner }}
+            source_token: ${{ secrets.GHCR_TOKEN }}
+            image_name: ${{ github.repository_owner }}/${{ env.APP_NAME }}
     if: github.repository_owner == 'kamorel'
     steps:       
       - uses: actions/checkout@v2
