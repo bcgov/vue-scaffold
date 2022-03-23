@@ -36,11 +36,11 @@ jobs:
           - docker.io
         include:
           - dest_registry: docker.io
-            dest_username: ${{ secrets.DOCKER_USERNAME }}
-            dest_token: ${{ secrets.DOCKER_TOKEN }}
+            dest_username: DOCKER_USERNAME
+            dest_token: secrets.DOCKER_TOKEN
             source_registry: ghcr.io
             source_username: ${{ github.repository_owner }}
-            source_token: ${{ secrets.GHCR_TOKEN }}
+            source_token: GHCR_TOKEN
             image_name: ${{ github.repository_owner }}/${{ env.APP_NAME }}
     if: github.repository_owner == 'kamorel'
     steps:       
@@ -50,8 +50,12 @@ jobs:
         uses: ./.github/actions/push-to-registry
         with:
           image_name: ${{ matrix.image_name }}
-          username: ${{ matrix.username }}
-          token: ${{ matrix.token }}
+          source_registry: ${{ matrix.source_registry }}
+          source_username: ${{ secrets.matrix[source_username] }}
+          source_token: ${{ secrets.matrix[source_token] }}
+          dest_registry: ${{ matrix.dest_registry }}
+          dest_username: ${{ secrets.matrix[dest_username] }}
+          dest_token: ${{ secrets.matrix[dest_token] }}
 
   deploy-dev:
     name: Deploy to Dev
