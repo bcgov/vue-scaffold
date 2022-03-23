@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        dest-registry:
+          - docker.io
         include:
           - dest_registry: docker.io
             dest_username: ${{ secrets.DOCKER_USERNAME }}
