@@ -35,10 +35,19 @@ jobs:
       matrix:
         dest-registry:
           - docker.io
+          - quay.io
+        # secrets cannot be accessed here
+        # use the secret name here, but reference the secrets in the steps below
         include:
           - dest_registry: docker.io
             dest_username: DOCKER_USERNAME
             dest_token: DOCKER_TOKEN
+            source_registry: ghcr.io
+            source_username: ${{ github.repository_owner }}
+            source_token: GHCR_TOKEN
+          - dest_registry: quay.io
+            dest_username: QUAY_USERNAME
+            dest_token: QUAY_TOKEN
             source_registry: ghcr.io
             source_username: ${{ github.repository_owner }}
             source_token: GHCR_TOKEN
@@ -49,7 +58,7 @@ jobs:
         id: builder
         uses: ./.github/actions/push-to-registry
         with:
-          image_name: ${{ github.repository_owner }}/${{ env.APP_NAME }}
+          image_name: ${{ env.APP_NAME }}
           source_registry: ${{ matrix.source_registry }}
           source_username: ${{ matrix.source_username }}
           source_token: ${{ secrets[matrix.source_token] }}
