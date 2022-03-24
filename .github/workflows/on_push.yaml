@@ -33,9 +33,6 @@ jobs:
     needs: build
     strategy:
       matrix:
-        dest-registry:
-          - docker.io
-          - quay.io
         # secrets cannot be accessed here
         # use the secret name here, but reference the secrets in the steps below
         include:
