@@ -54,4 +54,3 @@ runs:
         docker tag ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:master
         docker tag ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
         docker push --all-tags ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}
-

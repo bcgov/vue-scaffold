@@ -14,7 +14,7 @@ jobs:
     name: Build & Push to GHCR
     environment: dev
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'kamorel'
+    if: github.repository_owner == 'bcgov'
     steps:       
       - uses: actions/checkout@v2
       - name: Build & Push to GHCR
@@ -49,7 +49,7 @@ jobs:
             source_registry: ghcr.io
             source_username: ${{ github.repository_owner }}
             source_token: GHCR_TOKEN
-    if: github.repository_owner == 'kamorel'
+    if: github.repository_owner == 'bcgov'
     steps:       
       - uses: actions/checkout@v2
       - name: Build & Push to registry
@@ -69,7 +69,7 @@ jobs:
     environment: dev
     runs-on: ubuntu-latest
     needs: build    
-    if: github.repository_owner == 'kamorel'
+    if: github.repository_owner == 'bcgov'
     steps: 
     - uses: actions/checkout@v2
     - name: Deploy to Dev

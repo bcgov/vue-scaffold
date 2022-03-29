@@ -16,7 +16,7 @@ jobs:
     name: Remove PR build from dev namespace
     environment: dev
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'kamorel'
+    if: github.repository_owner == 'bcgov'
     steps:
     - uses: actions/checkout@v2
     - name: Install oc
@@ -36,6 +36,5 @@ jobs:
     - name: Remove PR contents
       shell: bash
       run: |
-        oc delete -n ${{ env.OPENSHIFT_NAMESPACE }}-dev all,secret,networkpolicy,rolebinding --selector app=${{ env.APP_NAME }}-pr-${{github.event.number}}
-        oc delete -n ${{ env.OPENSHIFT_NAMESPACE }}-dev all,svc,cm,sa,role,secret --selector cluster-name=pr-${{github.event.number}}
-        
+        oc delete -n ${{ env.OPENSHIFT_NAMESPACE }}-dev all,secret,networkpolicy,rolebinding --selector app=${{ env.APP_NAME }}-pr-${{ github.event.number }}
+        oc delete -n ${{ env.OPENSHIFT_NAMESPACE }}-dev all,svc,cm,sa,role,secret --selector cluster-name=pr-${{ github.event.number }}
