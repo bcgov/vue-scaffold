@@ -1,0 +1,56 @@
+name: Build & Push Container
+description: Build container from Dockerfile and pushes to registry
+inputs:
+  image_name:
+    required: true
+    type: string
+  source_registry:
+    required: true
+    type: string
+  source_username:
+    required: true
+    type: string
+  source_token:
+    required: true
+    type: string
+  dest_registry:
+    required: true
+    type: string
+  dest_username:
+    required: true
+    type: string
+  dest_token:
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+      
+    - name: Login to source container registry
+      if: ${{ inputs.source_username != '' }}
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ inputs.source_registry }}
+        username: ${{ inputs.source_username }}
+        password: ${{ inputs.source_token }}
+        
+    - name: Login to destination container registry
+      if: ${{ inputs.dest_username != '' }}
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ inputs.dest_registry }}
+        username: ${{ inputs.dest_username }}
+        password: ${{ inputs.dest_token }}
+        
+    - name: Pull source & Push to new registry
+      if: ${{ success() }}
+      shell: bash
+      run: |
+        docker pull ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest
+        docker tag ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:latest
+        docker tag ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:master
+        docker tag ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
+        docker push --all-tags ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}

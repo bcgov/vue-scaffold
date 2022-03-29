@@ -1,0 +1,107 @@
+name: Push
+
+env:
+  APP_NAME: "vue-scaffold"
+  OPENSHIFT_NAMESPACE: "1dca6b"
+  
+on:
+  push:
+    branches:
+      - master
+      
+jobs:
+  build:
+    name: Build & Push to GHCR
+    environment: dev
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'bcgov'
+    steps:       
+      - uses: actions/checkout@v2
+      - name: Build & Push to GHCR
+        id: builder
+        uses: ./.github/actions/build-push-container
+        with:
+          context: './'
+          image_name: ${{ env.APP_NAME }}
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          token: ${{ secrets.GHCR_TOKEN }}
+          
+  push-additional-registries:
+    name: Build & Push to additional registries
+    environment: dev
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        # secrets cannot be accessed here
+        # use the secret name here, but reference the secrets in the steps below
+        include:
+          - dest_registry: docker.io
+            dest_username: DOCKER_USERNAME
+            dest_token: DOCKER_TOKEN
+            source_registry: ghcr.io
+            source_username: ${{ github.repository_owner }}
+            source_token: GHCR_TOKEN
+          - dest_registry: quay.io
+            dest_username: QUAY_USERNAME
+            dest_token: QUAY_TOKEN
+            source_registry: ghcr.io
+            source_username: ${{ github.repository_owner }}
+            source_token: GHCR_TOKEN
+    if: github.repository_owner == 'bcgov'
+    steps:       
+      - uses: actions/checkout@v2
+      - name: Build & Push to registry
+        id: builder
+        uses: ./.github/actions/push-to-registry
+        with:
+          image_name: ${{ env.APP_NAME }}
+          source_registry: ${{ matrix.source_registry }}
+          source_username: ${{ matrix.source_username }}
+          source_token: ${{ secrets[matrix.source_token] }}
+          dest_registry: ${{ matrix.dest_registry }}
+          dest_username: ${{ secrets[matrix.dest_username] }}
+          dest_token: ${{ secrets[matrix.dest_token] }}
+
+  deploy-dev:
+    name: Deploy to Dev
+    environment: dev
+    runs-on: ubuntu-latest
+    needs: build    
+    if: github.repository_owner == 'bcgov'
+    steps: 
+    - uses: actions/checkout@v2
+    - name: Deploy to Dev
+      id: builder
+      uses: ./.github/actions/deploy-to-environment
+      with:
+        openshift_namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+        openshift_environment: dev
+        app_name: ${{ env.APP_NAME }}
+        job_name: master
+        route_path: /app
+        openshift_server: ${{ secrets.OPENSHIFT_SERVER }}
+        openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+        
+  deploy-test:
+    name: Deploy to Test
+    environment: test
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - deploy-dev
+    if: github.repository_owner == 'kamorel'
+    steps: 
+    - uses: actions/checkout@v2
+    - name: Deploy to Test
+      id: builder
+      uses: ./.github/actions/deploy-to-environment
+      with:
+        openshift_namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+        openshift_environment: test
+        app_name: ${{ env.APP_NAME }}
+        job_name: master
+        route_path: /app
+        openshift_server: ${{ secrets.OPENSHIFT_SERVER }}
+        openshift_token: ${{ secrets.OPENSHIFT_TOKEN_TEST }}
