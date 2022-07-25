@@ -1,56 +1,79 @@
-name: Build & Push Container
-description: Build container from Dockerfile and pushes to registry
+name: Push to Registry
+description: Copies a container image to a different registry
 inputs:
   image_name:
+    description: Image Name
     required: true
-    type: string
   source_registry:
+    description: Source Container Registry
     required: true
-    type: string
+    default: ghcr.io
   source_username:
+    description: Source Container Registry Username
     required: true
-    type: string
   source_token:
+    description: Source Container Registry Authorization Token
     required: true
-    type: string
   dest_registry:
+    description: Destination Container Registry
     required: true
-    type: string
   dest_username:
+    description: Destination Container Registry Username
     required: true
-    type: string
   dest_token:
+    description: Destination Container Registry Authorization Token
     required: true
-    type: string
 
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
-      
-    - name: Login to source container registry
-      if: ${{ inputs.source_username != '' }}
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Login to Source Container Registry
+      if: inputs.source_username != ''
       uses: docker/login-action@v1
       with:
         registry: ${{ inputs.source_registry }}
         username: ${{ inputs.source_username }}
         password: ${{ inputs.source_token }}
-        
-    - name: Login to destination container registry
-      if: ${{ inputs.dest_username != '' }}
+
+    - name: Login to Destination Container Registry
+      if: inputs.dest_username != ''
       uses: docker/login-action@v1
       with:
         registry: ${{ inputs.dest_registry }}
         username: ${{ inputs.dest_username }}
         password: ${{ inputs.dest_token }}
-        
-    - name: Pull source & Push to new registry
-      if: ${{ success() }}
+
+    - name: Copy to Destination Container Registry
+      if: success()
+      uses: akhilerm/tag-push-action@v2.0.0
+      with:
+        src: ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest
+        dst: ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:latest
+
+    - name: Prepare Container Metadata tags
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}
+        # Creates tags based off of branch names and semver tags
+        tags: |
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=sha
+
+    - name: Add Tags to Destination Container Registry
+      uses: akhilerm/tag-push-action@v2.0.0
+      with:
+        src: ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:latest
+        dst: |
+          ${{ steps.meta.outputs.tags }}
+
+    - name: Inspect Docker Image
       shell: bash
       run: |
-        docker pull ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest
-        docker tag ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:latest
-        docker tag ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:master
-        docker tag ${{ inputs.source_registry }}/${{ inputs.source_username }}/${{ inputs.image_name }}:latest ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:sha-$(git rev-parse --short HEAD)
-        docker push --all-tags ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}
+        docker pull ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:latest
+        docker image inspect ${{ inputs.dest_registry }}/${{ inputs.dest_username }}/${{ inputs.image_name }}:latest
