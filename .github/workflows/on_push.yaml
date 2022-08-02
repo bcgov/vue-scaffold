@@ -14,26 +14,19 @@ on:
 
 jobs:
   build:
-    name: Build & Push to GHCR
+    name: Build & Push
     runs-on: ubuntu-latest
-    outputs:
-      HAS_DOCKERHUB_SECRETS: ${{ steps.check-secrets.outputs.HAS_DOCKERHUB_SECRETS }}
     timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Check Dockerhub Secrets
-        id: check-secrets
-        run: |
-          echo "::set-output name=HAS_DOCKERHUB_SECRETS::${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}"
-      - name: Build & Push to GHCR
+      - name: Build & Push
         uses: ./.github/actions/build-push-container
         with:
           context: .
           image_name: ${{ env.APP_NAME }}
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          github_username: ${{ github.repository_owner }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   push-additional-registries:
     name: Push to Additional Registries
